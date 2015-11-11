@@ -1,0 +1,12 @@
+[{
+	"pathpattern": "D:\\aws\\logs\\*\\APIGateway\\*\\nginx\\access.log*",
+	"type": "nginx",
+	"timeregex": "(?P<day>\\d{2})\\/(?P<month>[a-z|A-Z]+)\\/(?P<year>\\d{4}):(?P<hour>\\d{2}):(?P<min>\\d{2}):(?P<sec>\\d{2}) \\+\\d{4}",
+	"wholeregex": "(?P<remoteAddr>\\d+\\.\\d+\\.\\d+\\.\\d+) - (?P<remoteUser>.+) \\[(?P<time>.+)\\] (?P<request>.+) (?P<status>\\d+) (?P<bodyBytesSent>\\d+) (?P<httpReferer>.+) (?P<httpUserAgent>.+) (?P<localAddr>.+)"
+},
+{
+	"pathpattern": "D:\\aws\\logs\\*\\APOLLOEssentials-Linux\\*\\APOLLOEssentials.log*",
+	"type": "java",
+	"timeregex": "(?P<year>\\d{4})-(?P<month>\\d{2})-(?P<day>\\d{2}) (?P<hour>\\d{2}):(?P<min>\\d{2}):(?P<sec>\\d{2}):(?P<ms>\\d{3})",
+	"wholeregex": "(?P<time>\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}:\\d{3}) \\[(?P<thread>.+)\\] (?P<level>.+) (?P<class>.+) - (?P<message>.+)"
+}]
