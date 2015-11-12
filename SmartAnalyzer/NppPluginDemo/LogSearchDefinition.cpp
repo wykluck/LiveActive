@@ -36,7 +36,7 @@ void LogSearchDemo()
 	HWND curScintilla = (which == 0) ? nppData._scintillaMainHandle : nppData._scintillaSecondHandle;
 
 
-	LogScanner logScanner("D:\\aws\\logs", "patterns.json");
+	LogScanner logScanner("D:\\aws\\logs", "D:\\Github\\LiveActive\\SmartAnalyzer\\Logging\\patterns.json");
 
 	//start a thread to scan the folder for logs
 	auto logScan = std::bind(&LogScanner::Scan, &logScanner, 50, true);

@@ -29,4 +29,5 @@ bool LevelLogFieldFilter::Filter(const string& strField) const
 	{
 		return itr->second >= m_threshold;
 	}
+	return false;
 }

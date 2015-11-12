@@ -16,7 +16,7 @@ namespace SmartAnalyzer
 			tm_from.tm_sec = 0;
 			tm_to.tm_year = 2015 - 1900;
 			tm_to.tm_mon = 10;
-			tm_to.tm_mday = 8;
+			tm_to.tm_mday = 30;
 			tm_to.tm_hour = 23;
 			tm_to.tm_min = 59;
 			tm_to.tm_sec = 59;
@@ -26,8 +26,12 @@ namespace SmartAnalyzer
 			shared_ptr<TimeLogFieldFilter> pTimeLogFieldFilter(new TimeLogFieldFilter(from, to, pLogFilter->timeRegex));
 			pLogFilter->fieldNameFilterVec.push_back(pTimeLogFieldFilter);
 			pLogFilter->fieldFilterOpVec.push_back("&&");
-			shared_ptr<Java::MessageLogFieldFilter> pMsgLogFieldFilter(new Java::MessageLogFieldFilter("wmts"));
-			pLogFilter->fieldNameFilterVec.push_back(pMsgLogFieldFilter);
+			shared_ptr<Java::LevelLogFieldFilter> pLevelLogFieldFilter(new Java::LevelLogFieldFilter("WARN"));
+			pLogFilter->fieldNameFilterVec.push_back(pLevelLogFieldFilter);
+			//shared_ptr<Java::MessageLogFieldFilter> pMsgLogFieldFilter(new Java::MessageLogFieldFilter("error"));
+			//pLogFilter->fieldNameFilterVec.push_back(pMsgLogFieldFilter);
+			
+
 
 			return pLogFilter;
 		}
@@ -44,7 +48,7 @@ namespace SmartAnalyzer
 			tm_from.tm_sec = 0;
 			tm_to.tm_year = 2015 - 1900;
 			tm_to.tm_mon = 10;
-			tm_to.tm_mday = 8;
+			tm_to.tm_mday = 30;
 			tm_to.tm_hour = 23;
 			tm_to.tm_min = 59;
 			tm_to.tm_sec = 59;
@@ -54,7 +58,7 @@ namespace SmartAnalyzer
 			shared_ptr<TimeLogFieldFilter> pTimeLogFieldFilter(new TimeLogFieldFilter(from, to, pLogFilter->timeRegex));
 			pLogFilter->fieldNameFilterVec.push_back(pTimeLogFieldFilter);
 			pLogFilter->fieldFilterOpVec.push_back("&&");
-			std::set<int> statusCodeSet = { 400, 500 };
+			std::set<int> statusCodeSet = { 400, 500, 401, 503, 504 };
 			shared_ptr<Nginx::StatusLogFieldFilter> pMsgLogFieldFilter(new Nginx::StatusLogFieldFilter(statusCodeSet));
 			pLogFilter->fieldNameFilterVec.push_back(pMsgLogFieldFilter);
 

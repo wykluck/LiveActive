@@ -16,6 +16,9 @@
     <Filter Include="Header Files\public">
       <UniqueIdentifier>{b730aa6f-6f6b-4413-aaff-dd6ae43c1feb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="searchconfig">
+      <UniqueIdentifier>{a66838a3-ca70-40ec-9033-23c84f7d2887}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Logging\include\ILogResultProcessor.h">
@@ -68,5 +71,10 @@
     <ClCompile Include="..\Logging\NginxLogFieldFilters.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Logging\patterns.json">
+      <Filter>searchconfig</Filter>
+    </None>
   </ItemGroup>
 </Project>

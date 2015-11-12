@@ -14,7 +14,7 @@ namespace SmartAnalyzer
 		class __declspec(dllexport) LogScanner : public ILogResultProcessor
 		{
 		public:
-			LogScanner(const string& baseDir, const string& patternFile);
+			LogScanner(const string& baseDir, const string& patternFilePath);
 			virtual ~LogScanner();
 
 

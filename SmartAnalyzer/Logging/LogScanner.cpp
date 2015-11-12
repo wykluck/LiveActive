@@ -15,11 +15,9 @@ using namespace SmartAnalyzer::Logging;
 const int THREAD_POOL_COUNT = 6;
 
 
-LogScanner::LogScanner(const string& baseDir, const string& patternFile)
+LogScanner::LogScanner(const string& baseDir, const string& patternFilePath)
 {
 	m_baseDir = baseDir;
-	string patternFilePath = baseDir;
-	patternFilePath.append("\\").append(patternFile);
 	ifstream patternFileStream(patternFilePath);
 	Json::Value jsonRootValue;
 	patternFileStream >> jsonRootValue;
