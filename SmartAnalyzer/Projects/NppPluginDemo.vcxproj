@@ -33,24 +33,26 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
     <Import Project="no_ms_shit.props" />
+    <Import Project="generic.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
     <Import Project="no_ms_shit.props" />
+    <Import Project="generic.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>12.0.30501.0</_ProjectFileVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(Configuration)\</OutDir>
-    <IntDir>$(Configuration)\</IntDir>
+    <OutDir>$(OutDir)</OutDir>
+    <IntDir>$(IntDir)</IntDir>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(Configuration)\</OutDir>
-    <IntDir>$(Configuration)\</IntDir>
+    <OutDir>$(OutDir)</OutDir>
+    <IntDir>$(IntDir)</IntDir>
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -75,8 +77,8 @@
     </Link>
     <PostBuildEvent>
       <Command>
-copy $(ProjectDir)$(OutDir)Logging.dll "C:\Program Files (x86)\Notepad++\plugins";
-copy $(ProjectDir)$(OutDir)NppPluginDemo.dll "C:\Program Files (x86)\Notepad++\plugins"</Command>
+copy $(OutDir)Logging.dll "C:\Program Files (x86)\Notepad++\plugins";
+copy $(OutDir)NppPluginDemo.dll "C:\Program Files (x86)\Notepad++\plugins"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -102,8 +104,8 @@ copy $(ProjectDir)$(OutDir)NppPluginDemo.dll "C:\Program Files (x86)\Notepad++\p
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(ProjectDir)$(OutDir)Logging.dll "C:\Program Files (x86)\Notepad++\plugins";
-copy $(ProjectDir)$(OutDir)NppPluginDemo.dll "C:\Program Files (x86)\Notepad++\plugins"</Command>
+      <Command>copy $(OutDir)Logging.dll "C:\Program Files (x86)\Notepad++\plugins";
+copy $(OutDir)NppPluginDemo.dll "C:\Program Files (x86)\Notepad++\plugins"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

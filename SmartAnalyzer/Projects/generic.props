@@ -6,8 +6,12 @@
     <BOOST_INCLUDE_DIR>$(THIRDPARTY_DIR)\boost_1_59_0</BOOST_INCLUDE_DIR>
     <BOOST_LIB_DIR>$(THIRDPARTY_DIR)\boost_1_59_0\lib32-msvc-12.0</BOOST_LIB_DIR>
     <JSONCPP_BASE_DIR>..\jsoncpp</JSONCPP_BASE_DIR>
+    <BUILD_BASE_DIR>$(SolutionDir)..\..\staging\</BUILD_BASE_DIR>
   </PropertyGroup>
-  <PropertyGroup />
+  <PropertyGroup>
+    <OutDir>$(SolutionDir)..\..\staging\public\bin\$(PlatformName)$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\..\staging\$(SolutionName)\$(ProjectName)\$(PlatformName)$(Configuration)\</IntDir>
+  </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
       <AdditionalIncludeDirectories>$(BOOST_INCLUDE_DIR);$(JSONCPP_BASE_DIR);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -28,6 +32,9 @@
     </BuildMacro>
     <BuildMacro Include="JSONCPP_BASE_DIR">
       <Value>$(JSONCPP_BASE_DIR)</Value>
+    </BuildMacro>
+    <BuildMacro Include="BUILD_BASE_DIR">
+      <Value>$(BUILD_BASE_DIR)</Value>
     </BuildMacro>
   </ItemGroup>
 </Project>
