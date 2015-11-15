@@ -1,69 +1,110 @@
 #include "LogFilter.h"
+#include <boost/tokenizer.hpp>
+
 namespace SmartAnalyzer
 {
 	namespace Logging
 	{
 
-		std::shared_ptr<LogFilter> CreateTestJavaLogFilter(string& timeRegexStr, string& regexStr)
+
+		std::shared_ptr<LogFilter> CreateJavaLogFilter(string& filterDesc, string& timeRegexStr, string& regexStr)
 		{
+			typedef boost::tokenizer<boost::char_separator<char>> tokenizer;
+			boost::char_separator<char> sep{ " \t" };
+			tokenizer tok{ filterDesc, sep };
+			//split the filterDesc into tokens 
+			bool bValid = true;
 			std::shared_ptr<LogFilter> pLogFilter(new LogFilter(timeRegexStr, regexStr));
-			tm tm_from, tm_to;
-			tm_from.tm_year = 2015 - 1900;
-			tm_from.tm_mon = 10;
-			tm_from.tm_mday = 1;
-			tm_from.tm_hour = 0;
-			tm_from.tm_min = 0;
-			tm_from.tm_sec = 0;
-			tm_to.tm_year = 2015 - 1900;
-			tm_to.tm_mon = 10;
-			tm_to.tm_mday = 30;
-			tm_to.tm_hour = 23;
-			tm_to.tm_min = 59;
-			tm_to.tm_sec = 59;
-			time_t from = mktime(&tm_from);
-			time_t to = mktime(&tm_to);
-
-			shared_ptr<TimeLogFieldFilter> pTimeLogFieldFilter(new TimeLogFieldFilter(from, to, pLogFilter->timeRegex));
-			pLogFilter->fieldNameFilterVec.push_back(pTimeLogFieldFilter);
-			pLogFilter->fieldFilterOpVec.push_back("&&");
-			shared_ptr<Java::LevelLogFieldFilter> pLevelLogFieldFilter(new Java::LevelLogFieldFilter("WARN"));
-			pLogFilter->fieldNameFilterVec.push_back(pLevelLogFieldFilter);
-			//shared_ptr<Java::MessageLogFieldFilter> pMsgLogFieldFilter(new Java::MessageLogFieldFilter("error"));
-			//pLogFilter->fieldNameFilterVec.push_back(pMsgLogFieldFilter);
-			
-
-
+			for (const auto &t : tok)
+			{
+				if (t == "&&" || t == "||")
+				{
+					if (pLogFilter->fieldNameFilterVec.empty())
+					{
+						bValid = false;
+						break;
+					}
+					pLogFilter->fieldFilterOpVec.push_back(t);
+					continue;
+				}
+				//try to match the token with different java filters
+				shared_ptr<TimeLogFieldFilter>  pTimeLogFieldFilter = TimeLogFieldFilter::MatchCreate(t, timeRegexStr);
+				if (pTimeLogFieldFilter.get())
+				{
+					pLogFilter->fieldNameFilterVec.push_back(pTimeLogFieldFilter);
+					continue;
+				}
+				shared_ptr<Java::LevelLogFieldFilter>  pLevelLogFieldFilter = Java::LevelLogFieldFilter::MatchCreate(t);
+				if (pLevelLogFieldFilter.get())
+				{
+					pLogFilter->fieldNameFilterVec.push_back(pLevelLogFieldFilter);
+					continue;
+				}
+				shared_ptr<Java::MessageLogFieldFilter>  pMessageLogFieldFilter = Java::MessageLogFieldFilter::MatchCreate(t);
+				if (pTimeLogFieldFilter.get())
+				{
+					pLogFilter->fieldNameFilterVec.push_back(pMessageLogFieldFilter);
+					continue;
+				}
+				bValid = false;
+				break;
+			}
+			if (pLogFilter->fieldNameFilterVec.size() != pLogFilter->fieldFilterOpVec.size() + 1)
+				bValid = false;
+			if (!bValid)
+				pLogFilter.reset((LogFilter*)NULL);
 			return pLogFilter;
 		}
 
-		std::shared_ptr<LogFilter> CreateTestNginxLogFilter(string& timeRegexStr, string& regexStr)
+		std::shared_ptr<LogFilter> CreateNginxLogFilter(string& filterDesc, string& timeRegexStr, string& regexStr)
 		{
+			typedef boost::tokenizer<boost::char_separator<char>> tokenizer;
+			boost::char_separator<char> sep{ " \t" };
+			tokenizer tok{ filterDesc, sep };
+			//split the filterDesc into tokens 
+			bool bValid = true;
 			std::shared_ptr<LogFilter> pLogFilter(new LogFilter(timeRegexStr, regexStr));
-			tm tm_from, tm_to;
-			tm_from.tm_year = 2015 - 1900;
-			tm_from.tm_mon = 10;
-			tm_from.tm_mday = 1;
-			tm_from.tm_hour = 0;
-			tm_from.tm_min = 0;
-			tm_from.tm_sec = 0;
-			tm_to.tm_year = 2015 - 1900;
-			tm_to.tm_mon = 10;
-			tm_to.tm_mday = 30;
-			tm_to.tm_hour = 23;
-			tm_to.tm_min = 59;
-			tm_to.tm_sec = 59;
-			time_t from = mktime(&tm_from);
-			time_t to = mktime(&tm_to);
-
-			shared_ptr<TimeLogFieldFilter> pTimeLogFieldFilter(new TimeLogFieldFilter(from, to, pLogFilter->timeRegex));
-			pLogFilter->fieldNameFilterVec.push_back(pTimeLogFieldFilter);
-			pLogFilter->fieldFilterOpVec.push_back("&&");
-			std::set<int> statusCodeSet = { 400, 500, 401, 503, 504 };
-			shared_ptr<Nginx::StatusLogFieldFilter> pMsgLogFieldFilter(new Nginx::StatusLogFieldFilter(statusCodeSet));
-			pLogFilter->fieldNameFilterVec.push_back(pMsgLogFieldFilter);
-
+			for (const auto &t : tok)
+			{
+				if (t == "&&" || t == "||")
+				{
+					if (pLogFilter->fieldNameFilterVec.empty())
+					{
+						bValid = false;
+						break;
+					}
+					pLogFilter->fieldFilterOpVec.push_back(t);
+					continue;
+				}
+				//try to match the token with different java filters
+				shared_ptr<TimeLogFieldFilter>  pTimeLogFieldFilter = TimeLogFieldFilter::MatchCreate(t, timeRegexStr);
+				if (pTimeLogFieldFilter.get())
+				{
+					pLogFilter->fieldNameFilterVec.push_back(pTimeLogFieldFilter);
+					continue;
+				}
+				shared_ptr<Nginx::StatusLogFieldFilter>  pStatusLogFieldFilter = Nginx::StatusLogFieldFilter::MatchCreate(t);
+				if (pStatusLogFieldFilter.get())
+				{
+					pLogFilter->fieldNameFilterVec.push_back(pStatusLogFieldFilter);
+					continue;
+				}
+				shared_ptr<Nginx::RequestLogFieldFilter>  pRequestLogFieldFilter = Nginx::RequestLogFieldFilter::MatchCreate(t);
+				if (pRequestLogFieldFilter.get())
+				{
+					pLogFilter->fieldNameFilterVec.push_back(pRequestLogFieldFilter);
+					continue;
+				}
+				bValid = false;
+				break;
+			}
+			if (pLogFilter->fieldNameFilterVec.size() != pLogFilter->fieldFilterOpVec.size() + 1)
+				bValid = false;
+			if (!bValid)
+				pLogFilter.reset((LogFilter*)NULL);
 			return pLogFilter;
 		}
+
 	}
 }
 

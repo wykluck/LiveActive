@@ -51,9 +51,9 @@ namespace SmartAnalyzer
 
 		};
 
-		std::shared_ptr<LogFilter> CreateTestJavaLogFilter(string& timeRegexStr, string& regexStr);
+		std::shared_ptr<LogFilter> CreateJavaLogFilter(string& filterDesc, string& timeRegexStr, string& regexStr);
 
-		std::shared_ptr<LogFilter> CreateTestNginxLogFilter(string& timeRegexStr, string& regexStr);
+		std::shared_ptr<LogFilter> CreateNginxLogFilter(string& filterDesc, string& timeRegexStr, string& regexStr);
 
 	}
 }

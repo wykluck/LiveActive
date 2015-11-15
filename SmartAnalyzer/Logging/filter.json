@@ -1,0 +1,12 @@
+[
+    {
+        "filter": "time=[2015-11-01,2015-11-31] && level=WARN",
+		"type": "java",
+		"module": "all"
+    },
+    {
+		"filter": "time=[2015-11-01,2015-11-31] && status={400,500,401,503,504}",
+		"type": "nginx",
+		"module": "all"
+	}
+]

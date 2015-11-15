@@ -21,6 +21,17 @@ namespace SmartAnalyzer
 				{
 					m_normalMsg = normalMsg;
 				}
+				static shared_ptr<Java::MessageLogFieldFilter> MatchCreate(const string& token)
+				{
+					sregex filterRegex = sregex::compile("message=(?P<message>.+)");
+					smatch what;
+					shared_ptr<MessageLogFieldFilter> pMessageLogFieldFilter(NULL);
+					if (regex_search(token, what, filterRegex))
+					{
+						pMessageLogFieldFilter.reset(new MessageLogFieldFilter(what["message"]));
+					}
+					return pMessageLogFieldFilter;
+				}
 				//MessageLogFieldFilter(const sregex& sRegex) : m_sRegex(sRegex)
 				//{};
 				virtual ~MessageLogFieldFilter() {};
@@ -51,6 +62,18 @@ namespace SmartAnalyzer
 					ERROR = 4,
 					FATAL = 5
 				};
+
+				static shared_ptr<Java::LevelLogFieldFilter> MatchCreate(const string& token)
+				{
+					sregex filterRegex = sregex::compile("level=(?P<level>(TRACE|DEBUG|INFO|WARN|ERROR|FATAL))");
+					smatch what;
+					shared_ptr<LevelLogFieldFilter> pLevelLogFieldFilter(NULL);
+					if (regex_search(token, what, filterRegex))
+					{
+						pLevelLogFieldFilter.reset(new LevelLogFieldFilter(what["level"]));
+					}
+					return pLevelLogFieldFilter;
+				}
 
 				LevelLogFieldFilter(const string& thresholdStr)
 				{

@@ -3,6 +3,7 @@
 #include <deque>
 #include <mutex>              // std::mutex, std::unique_lock
 #include <condition_variable> // std::condition_variable
+#include <memory>
 #include "ILogResultProcessor.h"
 using namespace std;
 
@@ -11,15 +12,15 @@ namespace SmartAnalyzer
 {
 	namespace Logging
 	{
+		class LogFilter;
 		class __declspec(dllexport) LogScanner : public ILogResultProcessor
 		{
 		public:
 			LogScanner(const string& baseDir, const string& patternFilePath);
 			virtual ~LogScanner();
 
-
-			//virtual void Config(vector<ILogEntryProcessor>& processorVec);
-			void Scan(int minResultCounts, bool needSorting);
+			
+			bool Scan(const string& filterFilePath, int minResultCounts, bool needSorting);
 			void Pause();
 			void Stop();
 			bool IsFinished();
@@ -27,6 +28,7 @@ namespace SmartAnalyzer
 			deque<LogEntry> RetrieveResults();
 
 		private:
+			bool LogScanner::ParseFilter(const string& filterFilePath);
 			typedef enum {
 				NotConfigured,
 				Configured,
@@ -40,10 +42,12 @@ namespace SmartAnalyzer
 				string timeRegexStr;
 				string wholeRegexStr;
 				string type;
+				string dirPath;
 			}RegexStruct;
 
 			string m_baseDir;
-			map<string, RegexStruct> m_dirLogPatternMap;
+			map<string, RegexStruct> m_moduleLogPatternMap;
+			map<string, shared_ptr<LogFilter>> m_dirLogFilterMap;
 			Status m_status;
 			deque<LogEntry> m_resultQueue;
 			std::mutex m_mtx;

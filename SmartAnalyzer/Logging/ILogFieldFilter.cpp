@@ -27,11 +27,11 @@ namespace SmartAnalyzer
 
 		bool TimeLogFieldFilter::Filter(const string& strField) const
 		{
-			time_t timeField = ExtractTime(strField, m_timeRegex);
+			time_t timeField = ExtractTime(strField, m_timePatternRegex);
 			return (timeField >= m_from && timeField <= m_to);
 		}
 
-		time_t TimeLogFieldFilter::ExtractTime(const string& timeStrField, const sregex& timeRegex)
+		time_t TimeLogFieldFilter::ExtractTime(const string& timeStrField, const sregex& timeRegex, bool bContainTime)
 		{
 			//Parse strField against its time regex to tm
 			smatch what;
@@ -51,9 +51,18 @@ namespace SmartAnalyzer
 					tmField.tm_mon = itr->second - 1;
 				}
 				tmField.tm_mday = stoi(what["day"]);
-				tmField.tm_hour = stoi(what["hour"]);
-				tmField.tm_min = stoi(what["min"]);
-				tmField.tm_sec = stoi(what["sec"]);
+				if (bContainTime)
+				{
+					tmField.tm_hour = stoi(what["hour"]);
+					tmField.tm_min = stoi(what["min"]);
+					tmField.tm_sec = stoi(what["sec"]);
+				}
+				else
+				{
+					tmField.tm_hour = 0;
+					tmField.tm_min = 0;
+					tmField.tm_sec = 0;
+				}
 			}
 
 			time_t timeField = mktime(&tmField);

@@ -39,7 +39,7 @@ void LogSearchDemo()
 	LogScanner logScanner("D:\\aws\\logs", "D:\\Github\\LiveActive\\SmartAnalyzer\\Logging\\patterns.json");
 
 	//start a thread to scan the folder for logs
-	auto logScan = std::bind(&LogScanner::Scan, &logScanner, 50, true);
+	auto logScan = std::bind(&LogScanner::Scan, &logScanner, "D:\\Github\\LiveActive\\SmartAnalyzer\\Logging\\filter.json", 50, true);
 	std::thread	scanThread(logScan);
 
 	//wait for logs to be retrieved and output to the scintilla
