@@ -19,6 +19,10 @@ namespace SmartAnalyzer
 			{
 				return m_logString;
 			}
+			std::string& GetLogString() 
+			{
+				return m_logString;
+			}
 
 		private:
 			std::string m_logString;

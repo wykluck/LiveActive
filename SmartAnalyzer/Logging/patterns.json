@@ -19,5 +19,19 @@
 		"module": "OAuth",
         "timeregex": "(?P<year>\\d{4})-(?P<month>\\d{2})-(?P<day>\\d{2}) (?P<hour>\\d{2}):(?P<min>\\d{2}):(?P<sec>\\d{2}),(?P<ms>\\d{3})",
         "wholeregex": "(?P<level>\\w+)\\s+(?P<time>\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2},\\d{3})\\s+(?P<message>.+)"
-    }
+    },
+	{
+        "pathpattern": "D:\\aws\\logs\\*\\OAuth\\*\\stdouterr\\OAuth-stdouterr.log*",
+        "type": "java",
+		"module": "OAuth-stdouterr",
+        "timeregex": "(?P<year>\\d{4})-(?P<month>\\d{2})-(?P<day>\\d{2}) (?P<hour>\\d{2}):(?P<min>\\d{2}):(?P<sec>\\d{2}).(?P<ms>\\d{3})",
+        "wholeregex": "\\[(?P<time>\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}.\\d{3})\\]\\s+(?P<module>\\w+)\\s+-\\s+\\d+\\s+(?P<level>\\w+)\\s+\\[(?P<thread>.+)\\]\\s+---\\s+(?P<class>.+):\\s+(?P<message>.+)"
+    },
+	{
+		"pathpattern": "D:\\aws\\logs\\Development\\ELBLogs\\*\\AWSLogs\\*\\elasticloadbalancing\\us-west-2\\*\\*\\*",
+		"type": "elb",
+		"module": "ELB",
+		"timeregex": "(?P<year>\\d{4})-(?P<month>\\d{2})-(?P<day>\\d{2})T(?P<hour>\\d{2}):(?P<min>\\d{2}):(?P<sec>\\d{2}).(?P<ms>\\d+)Z",
+		"wholeregex": "(?P<time>\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d+Z) (?P<elbname>.+) (?P<clientAddr>.+) (?P<backendAddr>.+) (?P<requestProcessTime>.+) (?P<responseProcessTime>.+) (?P<elbStatusCode>.+) (?P<backendStatusCode>.+) (?P<receivedBytes>.+) (?P<sentBytes>.+) (?P<request>.+) (?P<clientAgent>.+) - -"
+	}
 ]

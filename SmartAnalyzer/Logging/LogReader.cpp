@@ -36,16 +36,17 @@ void LogReader::Read(const string& filePath, const shared_ptr<LogFilter> pLogFil
 	ifstream fileStream(filePath, ifstream::in);
 	char lineBuffer[MAX_LINE_CHARACTERS];
 	smatch what;
+	bool isPreviousLineInFilter = false;
+	string exceptionStr = "";
 	while (fileStream.good())
 	{
-		//TODO: Assuming the delimiter is line break for now
 		fileStream.getline(lineBuffer, MAX_LINE_CHARACTERS);
 
 		//match the lineBuffer with a regex specified by a filter
 		string lineStr(lineBuffer);
+		
 		if (regex_search(lineStr, what, pLogFilter->wholeRegex))
 		{
-			
 			bool result = pLogFilter->Filter(what);
 			
 			if (result)
@@ -54,11 +55,16 @@ void LogReader::Read(const string& filePath, const shared_ptr<LogFilter> pLogFil
 				time_t timeField = TimeLogFieldFilter::ExtractTime(what[TIME_FILTER_NAME], pLogFilter->timeRegex);
 				LogEntry logEntry(timeField, lineBuffer);
 				pThreadResQueue->push_back(logEntry);
+				isPreviousLineInFilter = true;
 			}
 		}
 		else
 		{
-			//no match, do nothing
+			if (isPreviousLineInFilter)
+			{
+				//add the exception lines to the logentry string
+				pThreadResQueue->back().GetLogString().append(lineBuffer).append("\n");
+			}
 		}
 	}
 
