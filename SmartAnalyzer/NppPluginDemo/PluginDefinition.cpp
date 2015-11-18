@@ -137,11 +137,11 @@ void commandMenuInit()
 
 	setCommand(11, TEXT("Get File Names Demo"), getFileNamesDemo, NULL, false);
 	setCommand(12, TEXT("Get Session File Names Demo"), getSessionFileNamesDemo, NULL, false);
-	setCommand(13, TEXT("Save Current Session Demo"), saveCurrentSessionDemo, NULL, false);
 
-	setCommand(14, TEXT("---"), NULL, NULL, false);
-	
-	setCommand(DOCKABLE_DEMO_INDEX, TEXT("Log Search Demo"), LogSearchDemo, NULL, false);
+	setCommand(13, TEXT("---"), NULL, NULL, false);
+
+	setCommand(14, TEXT("Log Search Demo"), LogSearchDemo, NULL, false);
+	setCommand(DOCKABLE_DEMO_INDEX, TEXT("Log Search Demo"), LogTraceDemo, NULL, false);
 	
 
 }

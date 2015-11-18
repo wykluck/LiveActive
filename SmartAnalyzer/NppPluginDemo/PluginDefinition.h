@@ -86,6 +86,7 @@ void getSessionFileNamesDemo();
 void saveCurrentSessionDemo();
 void DockableDlgDemo();
 void LogSearchDemo();
+void LogTraceDemo();
 
 
 #endif //PLUGINDEFINITION_H

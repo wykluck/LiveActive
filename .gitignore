@@ -1,4 +1,5 @@
 staging/
+utils/
 *.sdf
 *.suo
 *.opensdf

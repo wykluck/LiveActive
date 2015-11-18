@@ -59,7 +59,7 @@
     <ClInclude Include="..\NppPluginDemo\DockingFeature\Window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\NppPluginDemo\cintilla.h">
+    <ClInclude Include="..\NppPluginDemo\Scintilla.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -25,6 +25,7 @@ LogScanner::LogScanner(const string& baseDir, const string& patternFilePath)
 	if (jsonRootValue.isArray())
 	{
 		Json::ValueIterator jsonValueItr = jsonRootValue.begin();
+		unsigned short moduleIndex = 1;
 		while (jsonValueItr != jsonRootValue.end())
 		{
 			string moduleStr = (*jsonValueItr)["module"].asString();
@@ -33,7 +34,10 @@ LogScanner::LogScanner(const string& baseDir, const string& patternFilePath)
 			regexStruct.wholeRegexStr = (*jsonValueItr)["wholeregex"].asString();
 			regexStruct.type = (*jsonValueItr)["type"].asString();
 			regexStruct.dirPath = (*jsonValueItr)["pathpattern"].asString();
+			regexStruct.moduleIndex = moduleIndex++;
 			m_moduleLogPatternMap.insert(make_pair(moduleStr, regexStruct));
+
+			//TODO: need to construct m_moduleIndexTracerMap
 
 			jsonValueItr++;
 		}
@@ -118,14 +122,14 @@ bool LogScanner::ParseFilter(const string& filterFilePath)
 					//initialise a m_dirLogFilterMap from m_moduleLogPatternMap
 					if (itr->second.type == "java" && typeStr == itr->second.type)
 					{
-						auto pJavaLogFilter = CreateJavaLogFilter((*jsonValueItr)["filter"].asString(), itr->second.timeRegexStr, itr->second.wholeRegexStr);
+						auto pJavaLogFilter = CreateJavaLogFilter((*jsonValueItr)["filter"].asString(), itr->second.timeRegexStr, itr->second.wholeRegexStr, itr->second.moduleIndex);
 						if (pJavaLogFilter.get() == NULL)
 							return false;
 						m_dirLogFilterMap.insert(make_pair(itr->second.dirPath, pJavaLogFilter));
 					}
 					else if (itr->second.type == "nginx" && typeStr == itr->second.type)
 					{
-						auto pNginxLogFilter = CreateNginxLogFilter((*jsonValueItr)["filter"].asString(), itr->second.timeRegexStr, itr->second.wholeRegexStr);
+						auto pNginxLogFilter = CreateNginxLogFilter((*jsonValueItr)["filter"].asString(), itr->second.timeRegexStr, itr->second.wholeRegexStr, itr->second.moduleIndex);
 						if (pNginxLogFilter.get() == NULL)
 							return false;
 						m_dirLogFilterMap.insert(make_pair(itr->second.dirPath, pNginxLogFilter));				
@@ -141,14 +145,14 @@ bool LogScanner::ParseFilter(const string& filterFilePath)
 				//initialise a m_dirLogFilterMap from m_moduleLogPatternMap
 				if (itr->second.type == "java")
 				{
-					auto pJavaLogFilter = CreateJavaLogFilter((*jsonValueItr)["filter"].asString(), itr->second.timeRegexStr, itr->second.wholeRegexStr);
+					auto pJavaLogFilter = CreateJavaLogFilter((*jsonValueItr)["filter"].asString(), itr->second.timeRegexStr, itr->second.wholeRegexStr, itr->second.moduleIndex);
 					if (pJavaLogFilter.get() == NULL)
 						return false;
 					m_dirLogFilterMap.insert(make_pair(itr->second.dirPath, pJavaLogFilter));
 				}
 				else if (itr->second.type == "nginx")
 				{
-					auto pNginxLogFilter = CreateNginxLogFilter((*jsonValueItr)["filter"].asString(), itr->second.timeRegexStr, itr->second.wholeRegexStr);
+					auto pNginxLogFilter = CreateNginxLogFilter((*jsonValueItr)["filter"].asString(), itr->second.timeRegexStr, itr->second.wholeRegexStr, itr->second.moduleIndex);
 					if (pNginxLogFilter.get() == NULL)
 						return false;
 					m_dirLogFilterMap.insert(make_pair(itr->second.dirPath, pNginxLogFilter));

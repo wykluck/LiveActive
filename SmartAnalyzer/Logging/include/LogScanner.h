@@ -5,6 +5,7 @@
 #include <condition_variable> // std::condition_variable
 #include <memory>
 #include "ILogResultProcessor.h"
+#include "LogSourceTracer.h"
 using namespace std;
 
 
@@ -19,7 +20,8 @@ namespace SmartAnalyzer
 			LogScanner(const string& baseDir, const string& patternFilePath);
 			virtual ~LogScanner();
 
-			
+			const map<unsigned short, shared_ptr<LogSourceTracer>>& GetModuleIndexTracerMap();
+
 			bool Scan(const string& filterFilePath, int minResultCounts, bool needSorting);
 			void Pause();
 			void Stop();
@@ -43,11 +45,13 @@ namespace SmartAnalyzer
 				string wholeRegexStr;
 				string type;
 				string dirPath;
+				unsigned short moduleIndex;
 			}RegexStruct;
 
 			string m_baseDir;
 			map<string, RegexStruct> m_moduleLogPatternMap;
 			map<string, shared_ptr<LogFilter>> m_dirLogFilterMap;
+			map<unsigned short, shared_ptr<LogSourceTracer>> m_moduleIndexTracerMap;
 			Status m_status;
 			deque<LogEntry> m_resultQueue;
 			std::mutex m_mtx;

@@ -89,6 +89,7 @@
     <ClInclude Include="..\Logging\include\ILogResultProcessor.h" />
     <ClInclude Include="..\Logging\include\LogEntry.h" />
     <ClInclude Include="..\Logging\include\LogScanner.h" />
+    <ClInclude Include="..\Logging\include\LogSourceTracer.h" />
     <ClInclude Include="..\Logging\JavaLogFieldFilters.h" />
     <ClInclude Include="..\Logging\LogFilter.h" />
     <ClInclude Include="..\Logging\LogReader.h" />
@@ -102,6 +103,7 @@
     <ClCompile Include="..\Logging\LogReader.cpp" />
     <ClCompile Include="..\Logging\LogScanner.cpp" />
     <ClCompile Include="..\Logging\LogSorter.cpp" />
+    <ClCompile Include="..\Logging\LogSourceTracer.cpp" />
     <ClCompile Include="..\Logging\NginxLogFieldFilters.cpp" />
   </ItemGroup>
   <ItemGroup>

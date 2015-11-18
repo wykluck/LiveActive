@@ -7,14 +7,14 @@ namespace SmartAnalyzer
 	{
 
 
-		std::shared_ptr<LogFilter> CreateJavaLogFilter(string& filterDesc, string& timeRegexStr, string& regexStr)
+		std::shared_ptr<LogFilter> CreateJavaLogFilter(string& filterDesc, string& timeRegexStr, string& regexStr, unsigned short moduleIndex)
 		{
 			typedef boost::tokenizer<boost::char_separator<char>> tokenizer;
 			boost::char_separator<char> sep{ " \t" };
 			tokenizer tok{ filterDesc, sep };
 			//split the filterDesc into tokens 
 			bool bValid = true;
-			std::shared_ptr<LogFilter> pLogFilter(new LogFilter(timeRegexStr, regexStr));
+			std::shared_ptr<LogFilter> pLogFilter(new LogFilter(timeRegexStr, regexStr, moduleIndex));
 			for (const auto &t : tok)
 			{
 				if (t == "&&" || t == "||")
@@ -56,14 +56,14 @@ namespace SmartAnalyzer
 			return pLogFilter;
 		}
 
-		std::shared_ptr<LogFilter> CreateNginxLogFilter(string& filterDesc, string& timeRegexStr, string& regexStr)
+		std::shared_ptr<LogFilter> CreateNginxLogFilter(string& filterDesc, string& timeRegexStr, string& regexStr, unsigned short moduleIndex)
 		{
 			typedef boost::tokenizer<boost::char_separator<char>> tokenizer;
 			boost::char_separator<char> sep{ " \t" };
 			tokenizer tok{ filterDesc, sep };
 			//split the filterDesc into tokens 
 			bool bValid = true;
-			std::shared_ptr<LogFilter> pLogFilter(new LogFilter(timeRegexStr, regexStr));
+			std::shared_ptr<LogFilter> pLogFilter(new LogFilter(timeRegexStr, regexStr, moduleIndex));
 			for (const auto &t : tok)
 			{
 				if (t == "&&" || t == "||")
