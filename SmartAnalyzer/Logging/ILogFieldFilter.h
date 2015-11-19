@@ -31,7 +31,7 @@ namespace SmartAnalyzer
 		public:
 			static shared_ptr<TimeLogFieldFilter> MatchCreate(const string& token, const string& timePatternRegexStr)
 			{
-				sregex filterRegex = sregex::compile("time=\\[(?P<from>\\d{4}-\\d{2}-\\d{2}),(?P<to>(\\d{4}-\\d{2}-\\d{2}|now))\]");
+				sregex filterRegex = sregex::compile("time=\\[(?P<from>\\d{4}-\\d{2}-\\d{2}),(?P<to>(\\d{4}-\\d{2}-\\d{2}|now))\\]");
 				sregex timeRegex = sregex::compile("(?P<year>\\d{4})-(?P<month>\\d{2})-(?P<day>\\d{2})");
 				smatch what;
 				shared_ptr<TimeLogFieldFilter> pTimeLogFieldFilter(NULL);

@@ -121,7 +121,7 @@ void commandMenuInit()
 	shKey->_key = 0x46; //VK_F
 
 	setCommand(4, TEXT("Current Full Path"), insertCurrentFullPath, shKey, false);
-	setCommand(5, TEXT("Current File Name"), insertCurrentFileName, NULL, false);
+	setCommand(5, TEXT("Current Line Number"), insertCurrentLineNumber, NULL, false);
 	setCommand(6, TEXT("Current Directory"), insertCurrentDirectory, NULL, false);
 	setCommand(7, TEXT("Date & Time - short format"), insertShortDateTime, NULL, false);
 	setCommand(8, TEXT("Date & Time - long format"), insertLongDateTime, NULL, false);
@@ -141,10 +141,12 @@ void commandMenuInit()
 	setCommand(13, TEXT("---"), NULL, NULL, false);
 
 	setCommand(14, TEXT("Log Search Demo"), LogSearchDemo, NULL, false);
-	setCommand(DOCKABLE_DEMO_INDEX, TEXT("Log Search Demo"), LogTraceDemo, NULL, false);
+	setCommand(DOCKABLE_DEMO_INDEX, TEXT("Log Trace Demo"), LogTraceDemo, NULL, false);
 	
 
 }
+
+
 
 
 //
@@ -310,6 +312,17 @@ void insertCurrentPath(int which)
 #else
 	::SendMessage(curScint, SCI_REPLACESEL, 0, (LPARAM)path);
 #endif
+}
+
+#include <string>
+void insertCurrentLineNumber()
+{
+	HWND curScintilla = GetCurrentScintilla();
+	//get the current line number
+	unsigned int pos = ::SendMessage(curScintilla, SCI_GETCURRENTPOS, 0, 0);
+	unsigned int curLineNo = ::SendMessage(curScintilla, SCI_LINEFROMPOSITION, pos, 0);
+	std::string curLineStr = std::to_string(curLineNo);
+	::SendMessage(curScintilla, SCI_REPLACESEL, 0, (LPARAM)curLineStr.c_str());
 }
 
 void insertCurrentFullPath()

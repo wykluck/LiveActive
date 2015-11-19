@@ -22,6 +22,7 @@ namespace SmartAnalyzer
 
 			const map<unsigned short, shared_ptr<LogSourceTracer>>& GetModuleIndexTracerMap();
 
+
 			bool Scan(const string& filterFilePath, int minResultCounts, bool needSorting);
 			void Pause();
 			void Stop();

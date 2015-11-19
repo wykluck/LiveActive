@@ -95,7 +95,7 @@ copy $(OutDir)NppPluginDemo.dll "C:\Program Files (x86)\Notepad++\plugins"</Comm
       <SuppressStartupBanner>true</SuppressStartupBanner>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libboost_filesystem-vc120-mt-sgd-1_59.lib;libboost_system-vc120-mt-sgd-1_59.lib;shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)NppPluginDemo.dll</OutputFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)NppPluginDemo.pdb</ProgramDatabaseFile>

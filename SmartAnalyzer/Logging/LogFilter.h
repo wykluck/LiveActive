@@ -35,7 +35,7 @@ namespace SmartAnalyzer
 				//time=(2015-11-02, 2015-11-03) && message=(dfdfd, normal) && level>=(warn)
 				bool res = fieldNameFilterVec[0]->Filter(what[fieldNameFilterVec[0]->GetName()]);
 
-				for (auto i = 1; i < fieldNameFilterVec.size(); i++)
+				for (std::size_t i = 1; i < fieldNameFilterVec.size(); i++)
 				{
 					if (fieldFilterOpVec[i - 1] == "&&")
 					{

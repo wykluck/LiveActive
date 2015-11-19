@@ -28,7 +28,7 @@ LogScanner::LogScanner(const string& baseDir, const string& patternFilePath)
 		unsigned short moduleIndex = 1;
 		while (jsonValueItr != jsonRootValue.end())
 		{
-			string moduleStr = (*jsonValueItr)["module"].asString();
+			string moduleStr = (*jsonValueItr)["modulename"].asString();
 			RegexStruct regexStruct;
 			regexStruct.timeRegexStr = (*jsonValueItr)["timeregex"].asString();
 			regexStruct.wholeRegexStr = (*jsonValueItr)["wholeregex"].asString();
@@ -37,7 +37,16 @@ LogScanner::LogScanner(const string& baseDir, const string& patternFilePath)
 			regexStruct.moduleIndex = moduleIndex++;
 			m_moduleLogPatternMap.insert(make_pair(moduleStr, regexStruct));
 
-			//TODO: need to construct m_moduleIndexTracerMap
+			//construct m_moduleIndexTracerMap
+			Json::Value tracer = (*jsonValueItr)["tracer"];
+			TraceSourceInfo traceSourceInfo;
+			traceSourceInfo.sourceBaseDir = tracer["sourebasedir"].asString();
+			traceSourceInfo.extensions = tracer["extensions"].asString();
+			traceSourceInfo.openCommand = tracer["opencommand"].asString();
+			traceSourceInfo.directRegex = tracer["directregex"].asString();
+			traceSourceInfo.openArgs = tracer["openargs"].asString();
+			shared_ptr<LogSourceTracer> logSourceTracerPtr(new LogSourceTracer(traceSourceInfo));
+			m_moduleIndexTracerMap.insert(make_pair(moduleIndex, logSourceTracerPtr));
 
 			jsonValueItr++;
 		}
@@ -51,6 +60,11 @@ LogScanner::LogScanner(const string& baseDir, const string& patternFilePath)
 LogScanner::~LogScanner()
 {
 
+}
+
+const map<unsigned short, shared_ptr<LogSourceTracer>>& LogScanner::GetModuleIndexTracerMap()
+{
+	return m_moduleIndexTracerMap;
 }
 
 // You could also take an existing vector as a parameter.
@@ -220,6 +234,7 @@ bool LogScanner::Scan(const string& filterFilePath, int minResultCounts, bool ne
 		delete pResultProcessor;
 	}
 	m_cv.notify_one();
+	return true;
 }
 	
 void LogScanner::Pause()

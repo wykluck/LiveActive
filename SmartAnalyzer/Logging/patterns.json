@@ -2,7 +2,7 @@
     {
         "pathpattern": "D:\\aws\\logs\\*\\APIGateway\\*\\nginx\\access.log*",
         "type": "nginx",
-        "module": "APIGateway-Nginx",
+        "modulename": "APIGateway-Nginx",
         "timeregex": "(?P<day>\\d{2})\\/(?P<month>[a-z|A-Z]+)\\/(?P<year>\\d{4}):(?P<hour>\\d{2}):(?P<min>\\d{2}):(?P<sec>\\d{2}) \\+\\d{4}",
         "wholeregex": "(?P<remoteAddr>\\d+\\.\\d+\\.\\d+\\.\\d+) - (?P<remoteUser>.+) \\[(?P<time>.+)\\] (?P<request>.+) (?P<status>\\d+) (?P<bodyBytesSent>\\d+) (?P<httpReferer>.+) (?P<httpUserAgent>.+) (?P<localAddr>.+)"
     },
@@ -10,12 +10,13 @@
         "pathpattern": "D:\\aws\\logs\\*\\APOLLOEssentials-Linux\\*\\APOLLOEssentials.log*",
         "type": "java",
         "module": "APOLLOEssentials-Linux",
-        "trace": 
+        "tracer": 
         {
             "sourebasedir": "D:\\perforce\\Mainline\\Generation_3\\sources_iws\\Source\\C",
             "extensions": "*.h;*.c;*.cpp",
-            "opencommand": "D:\\Github\\LiveActive\\utils\\VisualStudioFileOpenTool\\VisualStudioFileOpenTool.exe 13 {file} {line}",
-            "directregex":  ".+\\((?P<file>\\w+\.\\w+):(?P<line>\\d+)\\)"
+            "opencommand": "D:\\Github\\LiveActive\\utils\\VisualStudioFileOpenTool\\VisualStudioFileOpenTool.exe",
+            "openargs":  "13 {file} {line}",
+            "directregex":  ".+\\((?P<file>\\w+\\.\\w+):(?P<line>\\d+)\\)"
         },
         "timeregex": "(?P<year>\\d{4})-(?P<month>\\d{2})-(?P<day>\\d{2}) (?P<hour>\\d{2}):(?P<min>\\d{2}):(?P<sec>\\d{2}):(?P<ms>\\d{3})",
         "wholeregex": "(?P<time>\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}:\\d{3})\\s+\\[(?P<thread>.+)\\]\\s+(?P<level>\\w+)\\s+(?P<class>.+)\\s+-\\s+(?P<message>.+)"
@@ -23,13 +24,14 @@
     {
         "pathpattern": "D:\\aws\\logs\\*\\OAuth\\*\\log\\OAuth.log*",
         "type": "java",
-        "module": "OAuth",
-        "trace": 
+        "modulename": "OAuth",
+        "tracer": 
         {
             "sourebasedir": "D:\\perforce\\Mainline\\Generation_4\\WindMill\\Oauth2\\authserver",
             "extensions": "*.java",
-            "opencommand": "\"C:\Program Files\NetBeans 8.0.2\bin\netbeans64.exe\" --open {file}:{line}",
-            "directregex":  ".+\\((?P<file>\\w+\.\\w+):(?P<line>\\d+)\\)"
+            "opencommand": "C:\\Program Files\\NetBeans 8.0.2\\bin\\netbeans64.exe",
+            "openargs":  "--open {file}:{line}",
+            "directregex":  ".+\\((?P<file>\\w+\\.\\w+):(?P<line>\\d+)\\)"
         },
         "timeregex": "(?P<year>\\d{4})-(?P<month>\\d{2})-(?P<day>\\d{2}) (?P<hour>\\d{2}):(?P<min>\\d{2}):(?P<sec>\\d{2}),(?P<ms>\\d{3})",
         "wholeregex": "(?P<level>\\w+)\\s+(?P<time>\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2},\\d{3})\\s+(?P<message>.+)"
@@ -37,13 +39,14 @@
 	{
         "pathpattern": "D:\\aws\\logs\\*\\OAuth\\*\\stdouterr\\OAuth-stdouterr.log*",
         "type": "java",
-        "module": "OAuth-stdouterr",
-        "trace": 
+        "modulename": "OAuth-stdouterr",
+        "tracer": 
         {
             "sourebasedir": "D:\\perforce\\Mainline\\Generation_4\\WindMill\\Oauth2\\authserver",
             "extensions": "*.java",
-            "opencommand": "\"C:\Program Files\NetBeans 8.0.2\bin\netbeans64.exe\" --open {file}:{line}",
-            "directregex":  ".+\\((?P<file>\\w+\.\\w+):(?P<line>\\d+)\\)"
+            "opencommand": "C:\\Program Files\\NetBeans 8.0.2\\bin\\netbeans64.exe",
+            "openargs":  "--open {file}:{line}",
+            "directregex":  ".+\\((?P<file>\\w+\\.\\w+):(?P<line>\\d+)\\)"
         },
         "timeregex": "(?P<year>\\d{4})-(?P<month>\\d{2})-(?P<day>\\d{2}) (?P<hour>\\d{2}):(?P<min>\\d{2}):(?P<sec>\\d{2}).(?P<ms>\\d{3})",
         "wholeregex": "\\[(?P<time>\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}.\\d{3})\\]\\s+(?P<module>\\w+)\\s+-\\s+\\d+\\s+(?P<level>\\w+)\\s+\\[(?P<thread>.+)\\]\\s+---\\s+(?P<class>.+):\\s+(?P<message>.+)"
@@ -51,7 +54,7 @@
 	{
 		"pathpattern": "D:\\aws\\logs\\Development\\ELBLogs\\*\\AWSLogs\\*\\elasticloadbalancing\\us-west-2\\*\\*\\*",
 		"type": "elb",
-		"module": "ELB",
+		"modulename": "ELB",
 		"timeregex": "(?P<year>\\d{4})-(?P<month>\\d{2})-(?P<day>\\d{2})T(?P<hour>\\d{2}):(?P<min>\\d{2}):(?P<sec>\\d{2}).(?P<ms>\\d+)Z",
 		"wholeregex": "(?P<time>\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d+Z) (?P<elbname>.+) (?P<clientAddr>.+) (?P<backendAddr>.+) (?P<requestProcessTime>.+) (?P<responseProcessTime>.+) (?P<elbStatusCode>.+) (?P<backendStatusCode>.+) (?P<receivedBytes>.+) (?P<sentBytes>.+) (?P<request>.+) (?P<clientAgent>.+) - -"
 	}
