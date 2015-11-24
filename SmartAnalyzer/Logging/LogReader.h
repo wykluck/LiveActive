@@ -11,12 +11,10 @@ namespace SmartAnalyzer
 		class LogReader
 		{
 		public:
-			LogReader();
-			virtual ~LogReader();
+			LogReader() = default;
+			virtual ~LogReader() = default;
 
-			static void Read(const string& filePath, const shared_ptr<LogFilter> pLogFilter, ILogResultProcessor* logResultProcessor);
-
-
+			static void Read(const string& filePath, const shared_ptr<LogFilter> pLogFilter, shared_ptr<ILogResultProcessor> logResultProcessorPtr);
 		};
 	}
 }

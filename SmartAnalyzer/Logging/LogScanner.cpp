@@ -12,7 +12,8 @@
 using namespace boost::threadpool;
 using namespace boost::filesystem;
 using namespace SmartAnalyzer::Logging;
-const int THREAD_POOL_COUNT = 6;
+//Thread count in thread pool
+const int THREAD_COUNT_IN_POOL = 6;
 
 
 LogScanner::LogScanner(const string& baseDir, const string& patternFilePath)
@@ -181,7 +182,7 @@ bool LogScanner::ParseFilter(const string& filterFilePath)
 	return true;
 }
 	
-bool LogScanner::Scan(const string& filterFilePath, int minResultCounts, bool needSorting)
+bool LogScanner::Scan(const string& filterFilePath,  bool bSplitInModule)
 {
 	//Try to parse filter and construct m_dirLogFilterMap
 	if (!ParseFilter(filterFilePath))
@@ -191,18 +192,22 @@ bool LogScanner::Scan(const string& filterFilePath, int minResultCounts, bool ne
 		return false;
 	}
 	
-	m_minResultCounts = minResultCounts;
 	recursive_directory_iterator pathItr(m_baseDir);
-	pool threadPool(THREAD_POOL_COUNT);
+	pool threadPool(THREAD_COUNT_IN_POOL);
 
-	ILogResultProcessor *pResultProcessor = NULL;
-	if (needSorting)
+	if (bSplitInModule)
 	{
-		//create a LogSorter to sort the results if needed
-		pResultProcessor = new LogSorter();
+		//splitIn
+		for (auto moduleLogPattern : m_moduleLogPatternMap)
+		{
+			m_moduleResultProcessorMap.insert(make_pair(moduleLogPattern.first, shared_ptr<ILogResultProcessor>(new LogSorter())));
+		}
 	}
 	else
-		pResultProcessor = this;
+	{
+		//create a LogSorter to sort the results if needed
+		m_moduleResultProcessorMap.insert(make_pair("all", shared_ptr<ILogResultProcessor>(new LogSorter())));
+	}
 	while (pathItr != boost::filesystem::recursive_directory_iterator())
 	{
 		if (is_regular_file(pathItr->path()))
@@ -210,10 +215,25 @@ bool LogScanner::Scan(const string& filterFilePath, int minResultCounts, bool ne
 			//schedule a LogReader to read log entries from the file
 			for (auto itr = m_dirLogFilterMap.begin(); itr != m_dirLogFilterMap.end(); itr++)
 			{
+				
 				if (path_contains_file(itr->first, pathItr->path().string()))
 				{
-					
-					auto logRead = std::bind(&LogReader::Read, pathItr->path().string(), itr->second, pResultProcessor);
+					shared_ptr<ILogResultProcessor> resultProcessorPtr(NULL);
+					if (m_moduleResultProcessorMap.size() == 1)
+						resultProcessorPtr = m_moduleResultProcessorMap["all"];
+					else
+					{
+						//TODO: this might be slow
+						for (auto moduleLogPattern : m_moduleLogPatternMap)
+						{
+							if (moduleLogPattern.second.dirPath == itr->first)
+							{
+								resultProcessorPtr = m_moduleResultProcessorMap[moduleLogPattern.first];
+								break;
+							}
+						}
+					}
+					auto logRead = std::bind(&LogReader::Read, pathItr->path().string(), itr->second, resultProcessorPtr);
 
 					threadPool.schedule(logRead);
 					//do not go to another mapping
@@ -228,11 +248,7 @@ bool LogScanner::Scan(const string& filterFilePath, int minResultCounts, bool ne
 
 	threadPool.wait();
 	m_status = Finished;
-	if (needSorting)
-	{
-		m_resultQueue.swap(pResultProcessor->RetrieveResults());
-		delete pResultProcessor;
-	}
+	
 	m_cv.notify_one();
 	return true;
 }
@@ -247,36 +263,30 @@ void LogScanner::Stop()
 
 }
 
-void LogScanner::PushFilteredResults(deque<LogEntry>& filteredResultQueue)
-{
-	std::lock_guard<std::mutex> lock(m_mtx);
-	m_resultQueue.insert(m_resultQueue.end(), filteredResultQueue.begin(), filteredResultQueue.end()); 
-	if (m_resultQueue.size() >= m_minResultCounts)
-	{
-		//if the result counts is bigger than minResultCounts, 
-		//notify the waiting thread and wait for result retrieval
-		m_cv.notify_one();
 
-	}
-}
-
-deque<LogEntry> LogScanner::RetrieveResults()
+std::map<string, deque<LogEntry>> LogScanner::RetrieveResults()
 {
+	std::map<string, deque<LogEntry>> moduleResultQueueMap;
 	if (m_status == Finished)
 	{
 		//Scanning is finished, just return the whole result queue
 		deque<LogEntry> resultQueue;
-		m_resultQueue.swap(resultQueue);
-		return resultQueue;
+		for (auto moduleResultProcessor : m_moduleResultProcessorMap)
+		{
+			moduleResultQueueMap[moduleResultProcessor.first] = moduleResultProcessor.second->RetrieveResults();
+		}
+		
 	}
 	else
 	{
 		std::unique_lock<std::mutex> lock(m_mtx);
 		m_cv.wait(lock);
-		deque<LogEntry> resultQueue;
-		m_resultQueue.swap(resultQueue);
-		return resultQueue;
+		for (auto moduleResultProcessor : m_moduleResultProcessorMap)
+		{
+			moduleResultQueueMap[moduleResultProcessor.first] = moduleResultProcessor.second->RetrieveResults();
+		}
 	}
+	return moduleResultQueueMap;
 }
 
 bool LogScanner::IsFinished()

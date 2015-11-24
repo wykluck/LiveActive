@@ -111,7 +111,10 @@ copy $(OutDir)NppPluginDemo.dll "C:\Program Files (x86)\Notepad++\plugins"</Comm
   <ItemGroup>
     <ClCompile Include="..\NppPluginDemo\DockingFeature\GoToLineDlg.cpp" />
     <ClCompile Include="..\NppPluginDemo\DockingFeature\StaticDialog.cpp" />
+    <ClCompile Include="..\NppPluginDemo\LogDocumentBase.cpp" />
     <ClCompile Include="..\NppPluginDemo\LogSearchDefinition.cpp" />
+    <ClCompile Include="..\NppPluginDemo\MergedLogDocument.cpp" />
+    <ClCompile Include="..\NppPluginDemo\ModuleLogDocument.cpp" />
     <ClCompile Include="..\NppPluginDemo\NppPluginDemo.cpp" />
     <ClCompile Include="..\NppPluginDemo\PluginDefinition.cpp" />
   </ItemGroup>
@@ -121,7 +124,10 @@ copy $(OutDir)NppPluginDemo.dll "C:\Program Files (x86)\Notepad++\plugins"</Comm
     <ClInclude Include="..\NppPluginDemo\DockingFeature\resource.h" />
     <ClInclude Include="..\NppPluginDemo\DockingFeature\StaticDialog.h" />
     <ClInclude Include="..\NppPluginDemo\DockingFeature\Window.h" />
+    <ClInclude Include="..\NppPluginDemo\LogDocumentBase.h" />
     <ClInclude Include="..\NppPluginDemo\menuCmdID.h" />
+    <ClInclude Include="..\NppPluginDemo\MergedLogDocument.h" />
+    <ClInclude Include="..\NppPluginDemo\ModuleLogDocument.h" />
     <ClInclude Include="..\NppPluginDemo\Notepad_plus_msgs.h" />
     <ClInclude Include="..\NppPluginDemo\PluginDefinition.h" />
     <ClInclude Include="..\NppPluginDemo\PluginInterface.h" />

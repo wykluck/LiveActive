@@ -3,6 +3,7 @@ namespace SmartAnalyzer
 {
 	namespace Logging
 	{
+		static const int MAX_LINE_CHARACTERS = 1024;
 		class LogEntry
 		{
 		public:
@@ -38,12 +39,15 @@ namespace SmartAnalyzer
 			{
 				return m_moduleIndex;
 			}
-
+			const std::string& GetLogThreadId()
+			{
+				return m_threadId;
+			}
 		private:
 			std::string m_logString;
 			time_t m_timeField;
 			unsigned short m_moduleIndex;
-
+			std::string m_threadId;
 		};
 	}
 }

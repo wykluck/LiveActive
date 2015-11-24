@@ -14,7 +14,7 @@ namespace SmartAnalyzer
 	namespace Logging
 	{
 		class LogFilter;
-		class __declspec(dllexport) LogScanner : public ILogResultProcessor
+		class __declspec(dllexport) LogScanner
 		{
 		public:
 			LogScanner(const string& baseDir, const string& patternFilePath);
@@ -23,12 +23,11 @@ namespace SmartAnalyzer
 			const map<unsigned short, shared_ptr<LogSourceTracer>>& GetModuleIndexTracerMap();
 
 
-			bool Scan(const string& filterFilePath, int minResultCounts, bool needSorting);
+			bool Scan(const string& filterFilePath, bool bSplitInModule);
 			void Pause();
 			void Stop();
 			bool IsFinished();
-			virtual void PushFilteredResults(deque<LogEntry>& filteredResultQueue);
-			deque<LogEntry> RetrieveResults();
+			map<string, deque<LogEntry>> RetrieveResults();
 
 		private:
 			bool LogScanner::ParseFilter(const string& filterFilePath);
@@ -49,15 +48,15 @@ namespace SmartAnalyzer
 				unsigned short moduleIndex;
 			}RegexStruct;
 
+
 			string m_baseDir;
 			map<string, RegexStruct> m_moduleLogPatternMap;
 			map<string, shared_ptr<LogFilter>> m_dirLogFilterMap;
 			map<unsigned short, shared_ptr<LogSourceTracer>> m_moduleIndexTracerMap;
 			Status m_status;
-			deque<LogEntry> m_resultQueue;
+			map<string, shared_ptr<ILogResultProcessor>> m_moduleResultProcessorMap;
 			std::mutex m_mtx;
 			std::condition_variable m_cv;
-			int m_minResultCounts;
 		};
 	}
 }

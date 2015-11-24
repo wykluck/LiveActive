@@ -67,8 +67,6 @@ void commandMenuCleanUp();
 bool setCommand(size_t index, TCHAR *cmdName, PFUNCPLUGINCMD pFunc, ShortcutKey *sk = NULL, bool check0nInit = false);
 
 
-HWND GetCurrentScintilla();
-
 //
 // Your plugin command functions
 //
@@ -89,7 +87,7 @@ void saveCurrentSessionDemo();
 void DockableDlgDemo();
 void LogSearchDemo();
 void LogTraceDemo();
-void insertCurrentLineNumber();
+void LogSyncDemo();
 
 
 #endif //PLUGINDEFINITION_H

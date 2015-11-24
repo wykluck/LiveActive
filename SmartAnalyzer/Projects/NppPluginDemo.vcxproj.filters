@@ -30,6 +30,15 @@
     <ClCompile Include="..\NppPluginDemo\LogSearchDefinition.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\NppPluginDemo\MergedLogDocument.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\NppPluginDemo\ModuleLogDocument.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\NppPluginDemo\LogDocumentBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\NppPluginDemo\DockingFeature\DockingDlgInterface.h">
@@ -60,6 +69,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\NppPluginDemo\Scintilla.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NppPluginDemo\MergedLogDocument.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NppPluginDemo\LogDocumentBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NppPluginDemo\ModuleLogDocument.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

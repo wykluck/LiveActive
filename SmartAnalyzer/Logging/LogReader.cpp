@@ -7,25 +7,12 @@
 #include <boost/thread/tss.hpp>
 #include "include\ILogResultProcessor.h"
 
-const int MAX_LINE_CHARACTERS = 256;
-const int MAX_ITEM_IN_QUEUE = 200;
 using namespace boost::xpressive;
 using namespace SmartAnalyzer::Logging;
 
 static boost::thread_specific_ptr< deque<LogEntry> > pThreadResQueue;
 
-
-LogReader::LogReader()
-{
-}
-
-
-LogReader::~LogReader()
-{
-}
-
-
-void LogReader::Read(const string& filePath, const shared_ptr<LogFilter> pLogFilter, ILogResultProcessor* pLogResultProcessor)
+void LogReader::Read(const string& filePath, const shared_ptr<LogFilter> pLogFilter, shared_ptr<ILogResultProcessor> logResultProcessorPtr)
 {
 	if (!pThreadResQueue.get()) {
 		// first time called by this thread
@@ -70,10 +57,10 @@ void LogReader::Read(const string& filePath, const shared_ptr<LogFilter> pLogFil
 
 	fileStream.close();
 
-	//call back to push filtered results if item counts is more than MAX_ITEM_IN_QUEUE
+	//call back to push filtered results 
 	if (pThreadResQueue->size() > 0)
 	{
-		pLogResultProcessor->PushFilteredResults(*pThreadResQueue.get());
+		logResultProcessorPtr->PushFilteredResults(*pThreadResQueue.get());
 		//empty the queue for reuse
 		pThreadResQueue->clear();
 	}
