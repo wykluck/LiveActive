@@ -20,28 +20,33 @@ namespace SmartAnalyzer
 {
 	namespace NPPLogging
 	{
-		HWND LogDocumentBase::GetCurrentScintilla()
+		ScintillaInfo LogDocumentBase::GetCurrentScintillaInfo()
 		{
 			// Get the current scintilla
+			ScintillaInfo scintillaInfo;
 			int which = -1;
 			::SendMessage(nppData._nppHandle, NPPM_GETCURRENTSCINTILLA, 0, (LPARAM)&which);
 			if (which == -1)
-				return (HWND)-1;
-			HWND curScintilla = (which == 0) ? nppData._scintillaMainHandle : nppData._scintillaSecondHandle;
+				return scintillaInfo;
+			scintillaInfo.view = which;
+			scintillaInfo.handle = (which == 0) ? nppData._scintillaMainHandle : nppData._scintillaSecondHandle;
 
-			return curScintilla;
+			
+			return scintillaInfo;
 		}
 
-		HWND LogDocumentBase::GetOtherScintilla()
+		ScintillaInfo LogDocumentBase::GetOtherScintillaInfo()
 		{
 			// Get the current scintilla
+			ScintillaInfo scintillaInfo;
 			int which = -1;
 			::SendMessage(nppData._nppHandle, NPPM_GETCURRENTSCINTILLA, 0, (LPARAM)&which);
 			if (which == -1)
-				return (HWND)-1;
-			HWND curScintilla = (which == 0) ? nppData._scintillaSecondHandle : nppData._scintillaMainHandle;
+				return scintillaInfo;
+			scintillaInfo.view = 1 - which;
+			scintillaInfo.handle = (which == 0) ? nppData._scintillaSecondHandle : nppData._scintillaMainHandle;
 
-			return curScintilla;
+			return scintillaInfo;
 		}
 
 		
@@ -60,11 +65,11 @@ namespace SmartAnalyzer
 
 		void LogDocumentBase::TraceInternal(std::shared_ptr<LogSourceTracer>& tracerPtr)
 		{
-			HWND curScintilla = GetCurrentScintilla();
+			auto curScintillaInfo = GetCurrentScintillaInfo();
 			//Get current line into line buffer;
-			int lineLength = ::SendMessage(curScintilla, SCI_GETCURLINE, 0, 0);
+			int lineLength = ::SendMessage(curScintillaInfo.handle, SCI_GETCURLINE, 0, 0);
 			char lineBuffer[MAX_LINE_CHARACTERS];
-			::SendMessage(curScintilla, SCI_GETCURLINE, lineLength, (LPARAM)lineBuffer);
+			::SendMessage(curScintillaInfo.handle, SCI_GETCURLINE, lineLength, (LPARAM)lineBuffer);
 			string lineStr(lineBuffer);
 
 			LogSourceTracer::TraceResult traceResult = tracerPtr->Trace(lineStr);

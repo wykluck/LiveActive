@@ -10,6 +10,7 @@
 #include "LogDocumentBase.h"
 #include "MergedLogDocument.h"
 #include "ModuleLogDocument.h"
+#include <codecvt>
 
 using namespace SmartAnalyzer::Logging;
 
@@ -18,7 +19,7 @@ using namespace SmartAnalyzer::NPPLogging;
 
 extern NppData nppData;
 
-std::map<int, shared_ptr<LogDocumentBase>> docIndexDocumentMap;
+std::map<string, shared_ptr<LogDocumentBase>> moduleDocumentMap;
 
 void LogSearchDemo()
 {
@@ -36,6 +37,8 @@ void LogSearchDemo()
 	//1.according logScanner generate docindex to LogDocumentBase Map
 	//2.call to individual LogDocumentBase's importfrom to append logentries
 	auto moduleLogResultMap = logScanner.RetrieveResults();
+	string logSearchDir = "c:\\Temp\\logsearch\\";
+	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> utf16conv;
 	for (auto moduleLogResult : moduleLogResultMap)
 	{
 		//skip empty result queue
@@ -43,27 +46,34 @@ void LogSearchDemo()
 			continue;
 		
 		::SendMessage(nppData._nppHandle, NPPM_MENUCOMMAND, 0, IDM_FILE_NEW);
-		HWND curScintilla = LogDocumentBase::GetCurrentScintilla();
-		int currentDocIndex = (int)::SendMessage(nppData._nppHandle, NPPM_GETCURRENTDOCINDEX, 0, (LPARAM)curScintilla);
+		auto curScintillaInfo = LogDocumentBase::GetCurrentScintillaInfo();
 		
 		if (moduleLogResult.first == "all")
 		{
-			auto insertResult = docIndexDocumentMap.insert(make_pair(currentDocIndex, shared_ptr<LogDocumentBase>(new MergedLogDocument(currentDocIndex,
+			auto insertResult = moduleDocumentMap.insert(make_pair(moduleLogResult.first, shared_ptr<LogDocumentBase>(new MergedLogDocument(moduleLogResult.first,
 				logScanner.GetModuleIndexTracerMap()))));
 			if (insertResult.second)
-				insertResult.first->second->ImportFrom(curScintilla, moduleLogResult.second);
+				insertResult.first->second->ImportFrom(curScintillaInfo.handle, moduleLogResult.second);
 		}
 		else
 		{	
 			auto moduleIndexTraceMap = logScanner.GetModuleIndexTracerMap();
-			auto insertResult = docIndexDocumentMap.insert(make_pair(currentDocIndex, shared_ptr<LogDocumentBase>(new ModuleLogDocument(currentDocIndex,
+			auto insertResult = moduleDocumentMap.insert(make_pair(moduleLogResult.first, shared_ptr<LogDocumentBase>(new ModuleLogDocument(moduleLogResult.first,
 				moduleIndexTraceMap[moduleLogResult.second.front().GetModuleIndex()]))));
 			if (insertResult.second)
-				insertResult.first->second->ImportFrom(curScintilla, moduleLogResult.second);
+				insertResult.first->second->ImportFrom(curScintillaInfo.handle, moduleLogResult.second);
 		}
 		
+		//save it to a file named with module name
+		string logsearchFilePath = logSearchDir;
+		logsearchFilePath.append(moduleLogResult.first);
+		
+		std::wstring wlogsearchFilePath = utf16conv.from_bytes(logsearchFilePath);
+		::SendMessage(nppData._nppHandle, NPPM_SAVECURRENTFILEAS, 0, (LPARAM)wlogsearchFilePath.c_str());
+
 		//set it to readonly
-		::SendMessage(curScintilla, SCI_SETREADONLY, 1, 1);
+		::SendMessage(curScintillaInfo.handle, SCI_SETREADONLY, 1, 1);
+		
 	}
 
 	
@@ -72,28 +82,33 @@ void LogSearchDemo()
 
 void LogTraceDemo()
 {
-	HWND curScintilla = LogDocumentBase::GetCurrentScintilla();
-	int currentDocIndex = (int)::SendMessage(nppData._nppHandle, NPPM_GETCURRENTDOCINDEX, 0, (LPARAM)curScintilla);
-	auto docIndexDocumentItr = docIndexDocumentMap.find(currentDocIndex);
-	if (docIndexDocumentItr != docIndexDocumentMap.end())
+	TCHAR path[256];
+	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> utf16conv;
+	::SendMessage(nppData._nppHandle, NPPM_GETFILENAME, 0, (LPARAM)path);
+	auto docIndexDocumentItr = moduleDocumentMap.find(utf16conv.to_bytes(path));
+	if (docIndexDocumentItr != moduleDocumentMap.end())
 		docIndexDocumentItr->second->Trace();
 
 }
 
 void LogSyncDemo()
 {
-	HWND curScintilla = LogDocumentBase::GetCurrentScintilla();
-	int currentDocIndex = (int)::SendMessage(nppData._nppHandle, NPPM_GETCURRENTDOCINDEX, 0, (LPARAM)curScintilla);
-	auto docIndexDocumentItr = docIndexDocumentMap.find(currentDocIndex);
-	if (docIndexDocumentItr != docIndexDocumentMap.end())
+	TCHAR path[256];
+	//find the current filename(moduleName) for the current view
+	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> utf16conv;
+	::SendMessage(nppData._nppHandle, NPPM_GETFILENAME, 0, (LPARAM)path);
+	auto moduleDocumentItr = moduleDocumentMap.find(utf16conv.to_bytes(path));
+
+	//find the current filename(moduleName) for another view
+	::SendMessage(nppData._nppHandle, NPPM_MENUCOMMAND, 0, IDM_VIEW_SWITCHTO_OTHER_VIEW);
+	::SendMessage(nppData._nppHandle, NPPM_GETFILENAME, 0, (LPARAM)path);
+	auto otherModuleDocumentItr = moduleDocumentMap.find(utf16conv.to_bytes(path));
+
+	::SendMessage(nppData._nppHandle, NPPM_MENUCOMMAND, 0, IDM_VIEW_SWITCHTO_OTHER_VIEW);
+	//sync them in time if they are inside the moduleDocumentMap
+	if (moduleDocumentItr != moduleDocumentMap.end() && otherModuleDocumentItr != moduleDocumentMap.end())
 	{
-		auto otherDocIndexDocumentItr = docIndexDocumentItr;
-		otherDocIndexDocumentItr++;
-		if (otherDocIndexDocumentItr == docIndexDocumentMap.end())
-		{
-			otherDocIndexDocumentItr = docIndexDocumentMap.begin();
-		}
-		docIndexDocumentItr->second->SyncTimeWith(*otherDocIndexDocumentItr->second);
+		moduleDocumentItr->second->SyncTimeWith(*otherModuleDocumentItr->second);
 	}
 }
 

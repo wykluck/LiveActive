@@ -70,6 +70,7 @@ extern "C" __declspec(dllexport) FuncItem * getFuncsArray(int *nbF)
 
 extern "C" __declspec(dllexport) void beNotified(SCNotification *notifyCode)
 {
+	int a = 0;
 	switch (notifyCode->nmhdr.code) 
 	{
 		case NPPN_SHUTDOWN:
@@ -77,7 +78,16 @@ extern "C" __declspec(dllexport) void beNotified(SCNotification *notifyCode)
 			commandMenuCleanUp();
 		}
 		break;
-
+		case NPPN_FILEBEFOREOPEN:
+		{
+			a = 1;
+		}
+		break;
+		case NPPN_BUFFERACTIVATED:
+		{
+			a = 2;
+		}
+		break;
 		case SCN_CHARADDED:
 		{
 			LangType docType;

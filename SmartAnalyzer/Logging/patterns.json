@@ -9,7 +9,7 @@
     {
         "pathpattern": "D:\\aws\\logs\\*\\APOLLOEssentials-Linux\\*\\APOLLOEssentials.log*",
         "type": "java",
-        "module": "APOLLOEssentials-Linux",
+        "modulename": "APOLLOEssentials-Linux",
         "tracer": 
         {
             "sourebasedir": "D:\\perforce\\Mainline\\Generation_3\\sources_iws\\Source\\C",

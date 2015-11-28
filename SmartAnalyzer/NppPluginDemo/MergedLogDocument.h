@@ -9,8 +9,8 @@ namespace SmartAnalyzer
 		class MergedLogDocument : public LogDocumentBase
 		{
 		public:
-			MergedLogDocument(int docIndex, const std::map<unsigned short, std::shared_ptr<Logging::LogSourceTracer>>& moduleIndexTracerMap)
-				: LogDocumentBase(docIndex), m_moduleIndexTracerMap(moduleIndexTracerMap)
+			MergedLogDocument(const std::string& moduleName, const std::map<unsigned short, std::shared_ptr<Logging::LogSourceTracer>>& moduleIndexTracerMap)
+				: LogDocumentBase(moduleName), m_moduleIndexTracerMap(moduleIndexTracerMap)
 			{
 
 			}

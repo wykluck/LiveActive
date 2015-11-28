@@ -9,8 +9,8 @@ namespace SmartAnalyzer
 		class ModuleLogDocument : public LogDocumentBase
 		{
 		public:
-			ModuleLogDocument(int docIndex, std::shared_ptr<Logging::LogSourceTracer> tracerPtr)
-				: LogDocumentBase(docIndex), m_tracerPtr(tracerPtr)
+			ModuleLogDocument(const std::string& moduleName, std::shared_ptr<Logging::LogSourceTracer> tracerPtr)
+				: LogDocumentBase(moduleName), m_tracerPtr(tracerPtr)
 			{
 
 			}

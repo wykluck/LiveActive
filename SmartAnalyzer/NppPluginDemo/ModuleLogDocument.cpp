@@ -3,6 +3,7 @@
 #include "ModuleLogDocument.h"
 #include "Scintilla.h"
 #include "Notepad_plus_msgs.h"
+#include "menuCmdID.h"
 
 extern NppData nppData;
 namespace SmartAnalyzer
@@ -36,7 +37,7 @@ namespace SmartAnalyzer
 		{
 			auto lowerLineNoItr = m_timeLineNumberMap.lower_bound(time);
 			auto upperLineNoItr = lowerLineNoItr++;
-			if (upperLineNoItr == m_timeLineNumberMap.end() || (abs(lowerLineNoItr->first - time) <= abs(upperLineNoItr->first - time)))
+			if (upperLineNoItr == m_timeLineNumberMap.end() || upperLineNoItr->second == time)
 				return lowerLineNoItr->second;
 			else
 				return upperLineNoItr->second;
@@ -49,19 +50,24 @@ namespace SmartAnalyzer
 			{
 				ModuleLogDocument& moduleOtherDoc = dynamic_cast<ModuleLogDocument&>(other);
 				//get the time for the current line
-				HWND curScintilla = GetCurrentScintilla();
-				unsigned int pos = ::SendMessage(curScintilla, SCI_GETCURRENTPOS, 0, 0);
-				unsigned int curLineNo = ::SendMessage(curScintilla, SCI_LINEFROMPOSITION, pos, 0) + 1;
+				auto curScintillaInfo = GetCurrentScintillaInfo();
+				
+				//get the current line's time
+				unsigned int pos = ::SendMessage(curScintillaInfo.handle, SCI_GETCURRENTPOS, 0, 0);
+				unsigned int curLineNo = ::SendMessage(curScintillaInfo.handle, SCI_LINEFROMPOSITION, pos, 0) + 1;
 				auto lineStructItr = m_lineStructMap.find(curLineNo);
 				time_t curTime = lineStructItr->second.logTime;
 				//TODO: Scroll the current line to center of the view
 
-				HWND otherScintilla = GetOtherScintilla();
-				::SendMessage(nppData._nppHandle, NPPM_ACTIVATEDOC, (WPARAM)otherScintilla, moduleOtherDoc.GetDocumentIndex());
+				//find the nearest line in term of time in other view
 				unsigned int otherCurLineNo = moduleOtherDoc.FindNearestLine(curTime);
-				::SendMessage(otherScintilla, SCI_GOTOLINE, otherCurLineNo - 1, 0);
+				auto otherScintillaInfo = GetOtherScintillaInfo();
+				::SendMessage(nppData._nppHandle, NPPM_MENUCOMMAND, 0, IDM_VIEW_SWITCHTO_OTHER_VIEW);
+				::SendMessage(otherScintillaInfo.handle, SCI_GOTOLINE, otherCurLineNo - 1, 0);
 
-				::SendMessage(nppData._nppHandle, NPPM_ACTIVATEDOC, (WPARAM)curScintilla, m_documentIndex);
+				//restore the current document index in the current view
+				::SendMessage(nppData._nppHandle, NPPM_MENUCOMMAND, 0, IDM_VIEW_SWITCHTO_OTHER_VIEW);
+				
 			}
 			catch (std::bad_cast&)
 			{

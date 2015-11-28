@@ -37,10 +37,10 @@ namespace SmartAnalyzer
 
 		void MergedLogDocument::Trace()
 		{
-			HWND curScintilla = GetCurrentScintilla();
+			auto curScintillaInfo = GetCurrentScintillaInfo();
 			//get the current line number
-			unsigned int pos = ::SendMessage(curScintilla, SCI_GETCURRENTPOS, 0, 0);
-			unsigned int curLineNo = ::SendMessage(curScintilla, SCI_LINEFROMPOSITION, pos, 0) + 1;
+			unsigned int pos = ::SendMessage(curScintillaInfo.handle, SCI_GETCURRENTPOS, 0, 0);
+			unsigned int curLineNo = ::SendMessage(curScintillaInfo.handle, SCI_LINEFROMPOSITION, pos, 0) + 1;
 
 			//search lineGroupModuleInfoVec to find the right moduleindex to trace
 			for (auto lineGroupModuleInfo : m_lineGroupModuleInfoVec)

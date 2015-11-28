@@ -64,6 +64,7 @@
       <PrecompiledHeaderFile />
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
       <AdditionalDependencies>shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -76,9 +77,9 @@
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <PostBuildEvent>
-      <Command>
-copy $(OutDir)Logging.dll "C:\Program Files (x86)\Notepad++\plugins";
-copy $(OutDir)NppPluginDemo.dll "C:\Program Files (x86)\Notepad++\plugins"</Command>
+      <Command>copy $(OutDir)Logging.dll "C:\Program Files (x86)\Notepad++\plugins";
+copy $(OutDir)NppPluginDemo.dll "C:\Program Files (x86)\Notepad++\plugins";
+copy $(OutDir)NppPluginDemo.pdb "C:\Program Files (x86)\Notepad++\plugins";</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

@@ -50,7 +50,7 @@ void LogReader::Read(const string& filePath, const shared_ptr<LogFilter> pLogFil
 			if (isPreviousLineInFilter)
 			{
 				//add the exception lines to the logentry string
-				pThreadResQueue->back().GetLogString().append(lineBuffer).append("\n");
+				pThreadResQueue->back().GetLogString().append("\n").append(lineBuffer);
 			}
 		}
 	}

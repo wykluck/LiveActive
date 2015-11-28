@@ -16,6 +16,7 @@
 //Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 #include "PluginDefinition.h"
+#include "Window.h"
 #include "menuCmdID.h"
 
 //
@@ -105,7 +106,7 @@ void commandMenuInit()
     //            );
     setCommand(0, TEXT("Hello Notepad++"), hello, NULL, false);
     setCommand(1, TEXT("Hello (with FX)"), helloFX, NULL, false);
-	setCommand(2, TEXT("What is Notepad++?"), WhatIsNpp, NULL, false);
+	setCommand(2, TEXT("dockable dlg demo"), DockableDlgDemo, NULL, false);
 	
 
 	// Here you insert a separator
@@ -166,19 +167,24 @@ void commandMenuCleanUp()
 //----------------------------------------------//
 void hello()
 {
-    // Open a new document
-    ::SendMessage(nppData._nppHandle, NPPM_MENUCOMMAND, 0, IDM_FILE_NEW);
+	// Open a new document
+	char hellStr[] = "hello";
+	::SendMessage(nppData._nppHandle, NPPM_MENUCOMMAND, (WPARAM)hellStr, IDM_FILE_NEW);
 
-    // Get the current scintilla
-    int which = -1;
-    ::SendMessage(nppData._nppHandle, NPPM_GETCURRENTSCINTILLA, 0, (LPARAM)&which);
-    if (which == -1)
-        return;
-    HWND curScintilla = (which == 0)?nppData._scintillaMainHandle:nppData._scintillaSecondHandle;
 
-    // Say hello now :
-    // Scintilla control has no Unicode mode, so we use (char *) here
-    ::SendMessage(curScintilla, SCI_SETTEXT, 0, (LPARAM)"Hello, Notepad++!");
+	// Get the current scintilla
+	int which = -1;
+	::SendMessage(nppData._nppHandle, NPPM_GETCURRENTSCINTILLA, 0, (LPARAM)&which);
+	if (which == -1)
+		return;
+	HWND curScintilla = (which == 0) ? nppData._scintillaMainHandle : nppData._scintillaSecondHandle;
+
+	// Say hello now :
+	// Scintilla control has no Unicode mode, so we use (char *) here
+	::SendMessage(curScintilla, SCI_SETTEXT, 0, (LPARAM)"Hello, Notepad++!");
+
+	::SendMessage(nppData._nppHandle, NPPM_MENUCOMMAND, (WPARAM)hellStr, IDM_FILE_RENAME);
+	
 }
 
 
