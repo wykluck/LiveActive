@@ -52,13 +52,14 @@ namespace SmartAnalyzer
 		
 		unsigned int LogDocumentBase::ImportFromInternal(HWND curScintilla, const std::string& logStr)
 		{
-			//Append the logentry to the end of the document
-			unsigned int tmpPos = ::SendMessage(curScintilla, SCI_APPENDTEXT, logStr.length(), (LPARAM)logStr.c_str());
-			//go to the end of document and get line number 
+			unsigned //go to the end of document and get line number
 			unsigned int length = ::SendMessage(curScintilla, SCI_GETLENGTH, 0, 0);
 			::SendMessage(curScintilla, SCI_GOTOPOS, length, 0);
 			unsigned int pos = ::SendMessage(curScintilla, SCI_GETCURRENTPOS, 0, 0);
 			unsigned int curLineNo = ::SendMessage(curScintilla, SCI_LINEFROMPOSITION, pos, 0);
+
+			//Append the logentry to the end of the document
+			unsigned int tmpPos = ::SendMessage(curScintilla, SCI_APPENDTEXT, logStr.length(), (LPARAM)logStr.c_str());
 
 			return curLineNo;
 		}
