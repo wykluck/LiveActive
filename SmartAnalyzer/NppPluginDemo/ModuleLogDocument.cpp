@@ -53,6 +53,8 @@ namespace SmartAnalyzer
 				//get the current line's time
 				unsigned int pos = ::SendMessage(curScintillaInfo.handle, SCI_GETCURRENTPOS, 0, 0);
 				unsigned int curLineNo = ::SendMessage(curScintillaInfo.handle, SCI_LINEFROMPOSITION, pos, 0);
+				int displayLineNo = ::SendMessage(curScintillaInfo.handle, SCI_VISIBLEFROMDOCLINE, curLineNo, 0);
+				::SendMessage(curScintillaInfo.handle, SCI_SETFIRSTVISIBLELINE, displayLineNo, 0);
 				auto lineStructItr = m_lineStructMap.find(curLineNo);
 				time_t curTime = lineStructItr->second.logTime;
 				//TODO: Scroll the current line to center of the view
@@ -62,6 +64,8 @@ namespace SmartAnalyzer
 				auto otherScintillaInfo = GetOtherScintillaInfo();
 				::SendMessage(nppData._nppHandle, NPPM_MENUCOMMAND, 0, IDM_VIEW_SWITCHTO_OTHER_VIEW);
 				::SendMessage(otherScintillaInfo.handle, SCI_GOTOLINE, otherCurLineNo, 0);
+				int otherDisplayLineNo = ::SendMessage(otherScintillaInfo.handle, SCI_VISIBLEFROMDOCLINE, otherCurLineNo, 0);
+				::SendMessage(otherScintillaInfo.handle, SCI_SETFIRSTVISIBLELINE, otherDisplayLineNo, 0);
 
 				//restore the current document index in the current view
 				::SendMessage(nppData._nppHandle, NPPM_MENUCOMMAND, 0, IDM_VIEW_SWITCHTO_OTHER_VIEW);

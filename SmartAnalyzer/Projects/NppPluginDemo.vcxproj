@@ -133,6 +133,7 @@ copy $(OutDir)NppPluginDemo.dll "C:\Program Files (x86)\Notepad++\plugins"</Comm
     <ClInclude Include="..\NppPluginDemo\PluginDefinition.h" />
     <ClInclude Include="..\NppPluginDemo\PluginInterface.h" />
     <ClInclude Include="..\NppPluginDemo\Scintilla.h" />
+    <ClInclude Include="..\NppPluginDemo\Sci_Position.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\NppPluginDemo\DockingFeature\goLine.rc" />

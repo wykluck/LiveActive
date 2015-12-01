@@ -70,7 +70,7 @@ extern "C" __declspec(dllexport) FuncItem * getFuncsArray(int *nbF)
 
 extern "C" __declspec(dllexport) void beNotified(SCNotification *notifyCode)
 {
-	int a = 0;
+	int curLineNo = 0;
 	switch (notifyCode->nmhdr.code) 
 	{
 		case NPPN_SHUTDOWN:
@@ -78,14 +78,20 @@ extern "C" __declspec(dllexport) void beNotified(SCNotification *notifyCode)
 			commandMenuCleanUp();
 		}
 		break;
-		case NPPN_FILEBEFOREOPEN:
+		case SCN_UPDATEUI:
 		{
-			a = 1;
-		}
-		break;
-		case NPPN_BUFFERACTIVATED:
-		{
-			a = 2;
+
+			if (notifyCode->updated == SC_UPDATE_V_SCROLL)
+			{
+				int currentEdit;
+				::SendMessage(nppData._nppHandle, NPPM_GETCURRENTSCINTILLA, 0, (LPARAM)&currentEdit);
+				HWND hCurrentEditView = (currentEdit == 0) ? nppData._scintillaMainHandle : nppData._scintillaSecondHandle;
+				
+				curLineNo = ::SendMessage(hCurrentEditView, SCI_GETFIRSTVISIBLELINE, 0, 0);
+				curLineNo = ::SendMessage(hCurrentEditView, SCI_DOCLINEFROMVISIBLE, curLineNo, 0);
+				::SendMessage(hCurrentEditView, SCI_GOTOLINE, curLineNo, 0);
+				LogSyncDemo();
+			}
 		}
 		break;
 		case SCN_CHARADDED:
