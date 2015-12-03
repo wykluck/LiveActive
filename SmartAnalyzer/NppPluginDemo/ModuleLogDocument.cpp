@@ -22,7 +22,8 @@ namespace SmartAnalyzer
 				//construct m_lineStructMap
 				LineStructInfo lineStructInfo = { logResultQueue.front().GetLogTime(), logResultQueue.front().GetLogThreadId() };
 				m_lineStructMap.insert(make_pair(curLineNo, lineStructInfo));
-				m_timeLineNumberMap.insert(make_pair(logResultQueue.front().GetLogTime(), curLineNo));
+				//Assign the latest if the time key are the same 
+				m_timeLineNumberMap[logResultQueue.front().GetLogTime()] = curLineNo;
 
 				logResultQueue.pop_front();
 			}
@@ -55,7 +56,10 @@ namespace SmartAnalyzer
 				unsigned int curLineNo = ::SendMessage(curScintillaInfo.handle, SCI_LINEFROMPOSITION, pos, 0);
 				int displayLineNo = ::SendMessage(curScintillaInfo.handle, SCI_VISIBLEFROMDOCLINE, curLineNo, 0);
 				::SendMessage(curScintillaInfo.handle, SCI_SETFIRSTVISIBLELINE, displayLineNo, 0);
-				auto lineStructItr = m_lineStructMap.find(curLineNo);
+				//find the line has timestamp on it
+				auto lineStructItr = m_lineStructMap.lower_bound(curLineNo);
+				if (lineStructItr->first != curLineNo)
+					lineStructItr--;
 				time_t curTime = lineStructItr->second.logTime;
 				//TODO: Scroll the current line to center of the view
 
