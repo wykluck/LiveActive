@@ -1,4 +1,5 @@
 #include "ILogFieldFilter.h"
+#include "include/TimeStruct.h"
 
 namespace SmartAnalyzer
 {
@@ -27,15 +28,16 @@ namespace SmartAnalyzer
 
 		bool TimeLogFieldFilter::Filter(const string& strField) const
 		{
-			time_t timeField = ExtractTime(strField, m_timePatternRegex);
+			TimeStruct timeField = ExtractTime(strField, m_timePatternRegex);
 			return (timeField >= m_from && timeField <= m_to);
 		}
 
-		time_t TimeLogFieldFilter::ExtractTime(const string& timeStrField, const sregex& timeRegex, bool bContainTime)
+		TimeStruct TimeLogFieldFilter::ExtractTime(const string& timeStrField, const sregex& timeRegex, bool bContainTime)
 		{
 			//Parse strField against its time regex to tm
 			smatch what;
 			tm tmField;
+			unsigned short milliseconds = 0;
 			if (regex_search(timeStrField, what, timeRegex))
 			{
 				tmField.tm_year = stoi(what["year"]) - 1900;
@@ -63,10 +65,11 @@ namespace SmartAnalyzer
 					tmField.tm_min = 0;
 					tmField.tm_sec = 0;
 				}
+				
+				
 			}
-
-			time_t timeField = mktime(&tmField);
-			return timeField;
+		
+			return TimeStruct(tmField, milliseconds);
 		}
 	}
 }

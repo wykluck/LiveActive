@@ -1,6 +1,7 @@
 #pragma once
 #include "LogDocumentBase.h"
 #include "LogSourceTracer.h"
+#include "TimeStruct.h"
 #include <map>
 namespace SmartAnalyzer
 {
@@ -23,12 +24,12 @@ namespace SmartAnalyzer
 		private:
 			struct LineStructInfo
 			{
-				time_t logTime;
+				Logging::TimeStruct logTime;
 				string logThreadId;
 			};
 
-			unsigned int FindNearestLine(time_t time);
-			std::map<time_t, unsigned int> m_timeLineNumberMap;
+			unsigned int FindNearestLine(const Logging::TimeStruct& time);
+			std::map<Logging::TimeStruct, unsigned int> m_timeLineNumberMap;
 			std::map<unsigned int, LineStructInfo> m_lineStructMap;
 			std::shared_ptr<Logging::LogSourceTracer> m_tracerPtr;
 		};

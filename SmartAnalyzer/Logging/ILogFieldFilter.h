@@ -2,6 +2,7 @@
 #include <string>
 #include <boost/xpressive/xpressive.hpp>
 #include <ctime>
+#include "include/TimeStruct.h"
 namespace SmartAnalyzer
 {
 	namespace Logging
@@ -37,11 +38,13 @@ namespace SmartAnalyzer
 				shared_ptr<TimeLogFieldFilter> pTimeLogFieldFilter(NULL);
 				if (regex_search(token, what, filterRegex))
 				{
-					time_t fromTime = ExtractTime(what["from"], timeRegex, false);
-					time_t toTime;
+					TimeStruct fromTime = ExtractTime(what["from"], timeRegex, false);
+					TimeStruct toTime;
 					if (what["to"] == "now")
 					{
-						time(&toTime);
+						time_t toDatetime;
+						time(&toDatetime);
+						toTime.Set(toDatetime, 0);
 					}
 					else
 					{
@@ -52,8 +55,8 @@ namespace SmartAnalyzer
 				}
 				
 				return pTimeLogFieldFilter;
-			}
-			TimeLogFieldFilter(const time_t& from, const time_t& to, const sregex& timePatternRegex)
+			};
+			TimeLogFieldFilter(const TimeStruct& from, const TimeStruct& to, const sregex& timePatternRegex)
 				: m_from(from), m_to(to), m_timePatternRegex(timePatternRegex)
 			{
 				
@@ -61,7 +64,7 @@ namespace SmartAnalyzer
 			};
 			virtual ~TimeLogFieldFilter() {};
 			virtual bool Filter(const string& strField) const;
-			static time_t ExtractTime(const string& timeStrField, const sregex& timeRegex, bool bContainTime = true);
+			static TimeStruct ExtractTime(const string& timeStrField, const sregex& timeRegex, bool bContainTime = true);
 			
 			virtual string GetName() const
 			{
@@ -69,8 +72,8 @@ namespace SmartAnalyzer
 			};
 			
 		private:
-			time_t m_from;
-			time_t m_to;
+			TimeStruct m_from;
+			TimeStruct m_to;
 			sregex m_timePatternRegex;
 			static std::map<std::string, int> s_MonthStrToIntMap;
 			static map<std::string, int> CreateMonthStrToIntMap();

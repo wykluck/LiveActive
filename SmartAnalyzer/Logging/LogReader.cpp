@@ -1,11 +1,11 @@
 #include "LogReader.h"
 #include "LogFilter.h"
 #include "LogSorter.h"
-#include "include\LogEntry.h"
+#include "include/LogEntry.h"
 #include <fstream>
 #include <boost/xpressive/xpressive.hpp>
 #include <boost/thread/tss.hpp>
-#include "include\ILogResultProcessor.h"
+#include "include/ILogResultProcessor.h"
 
 using namespace boost::xpressive;
 using namespace SmartAnalyzer::Logging;
@@ -39,7 +39,7 @@ void LogReader::Read(const string& filePath, const shared_ptr<LogFilter> pLogFil
 			if (result)
 			{
 				//extract time from the log entry
-				time_t timeField = TimeLogFieldFilter::ExtractTime(what[TIME_FILTER_NAME], pLogFilter->timeRegex);
+				TimeStruct timeField = TimeLogFieldFilter::ExtractTime(what[TIME_FILTER_NAME], pLogFilter->timeRegex);
 				LogEntry logEntry(timeField, lineBuffer, pLogFilter->moduleIndex);
 				pThreadResQueue->push_back(logEntry);
 				isPreviousLineInFilter = true;

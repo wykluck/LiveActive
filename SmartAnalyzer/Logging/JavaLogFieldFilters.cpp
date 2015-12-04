@@ -16,9 +16,10 @@ map<string, LevelLogFieldFilter::Level> LevelLogFieldFilter::CreateLogLevelStrEn
 		tmpMap.insert(make_pair("WARN", Level::WARN));
 		tmpMap.insert(make_pair("ERROR", Level::ERROR));
 		tmpMap.insert(make_pair("FATAL", Level::FATAL));
-
 		return tmpMap;
 	}
+	else
+		return s_LogLevelStrEnumMap;
 }
 
 

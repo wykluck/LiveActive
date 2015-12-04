@@ -1,4 +1,5 @@
 #pragma once
+#include "TimeStruct.h"
 namespace SmartAnalyzer
 {
 	namespace Logging
@@ -7,7 +8,7 @@ namespace SmartAnalyzer
 		class LogEntry
 		{
 		public:
-			LogEntry(const time_t& timeField, const std::string& logString, unsigned short moduleIndex) 
+			LogEntry(const TimeStruct& timeField, const std::string& logString, unsigned short moduleIndex) 
 				: m_timeField(timeField), m_logString(logString), m_moduleIndex(moduleIndex)
 			{};
 			virtual ~LogEntry() {};
@@ -23,7 +24,7 @@ namespace SmartAnalyzer
 				m_moduleIndex = other.m_moduleIndex;
 				return *this;
 			}
-			const time_t& GetLogTime() const
+			const TimeStruct& GetLogTime() const
 			{
 				return m_timeField;
 			}
@@ -45,7 +46,7 @@ namespace SmartAnalyzer
 			}
 		private:
 			std::string m_logString;
-			time_t m_timeField;
+			TimeStruct m_timeField;
 			unsigned short m_moduleIndex;
 			std::string m_threadId;
 		};

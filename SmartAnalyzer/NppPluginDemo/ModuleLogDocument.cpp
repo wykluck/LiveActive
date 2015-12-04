@@ -34,7 +34,7 @@ namespace SmartAnalyzer
 			return TraceInternal(m_tracerPtr);
 		}
 		
-		unsigned int ModuleLogDocument::FindNearestLine(time_t time)
+		unsigned int ModuleLogDocument::FindNearestLine(const Logging::TimeStruct& time)
 		{
 			auto lowerLineNoItr = m_timeLineNumberMap.lower_bound(time);
 			if ((lowerLineNoItr->first != time) && (lowerLineNoItr != m_timeLineNumberMap.begin()))
@@ -60,7 +60,7 @@ namespace SmartAnalyzer
 				auto lineStructItr = m_lineStructMap.lower_bound(curLineNo);
 				if (lineStructItr->first != curLineNo)
 					lineStructItr--;
-				time_t curTime = lineStructItr->second.logTime;
+				Logging::TimeStruct curTime = lineStructItr->second.logTime;
 				//TODO: Scroll the current line to center of the view
 
 				//find the nearest line in term of time in other view

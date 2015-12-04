@@ -51,6 +51,9 @@
     <ClInclude Include="..\Logging\include\LogSourceTracer.h">
       <Filter>Header Files\public</Filter>
     </ClInclude>
+    <ClInclude Include="..\Logging\include\TimeStruct.h">
+      <Filter>Header Files\public</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Logging\ILogFieldFilter.cpp">

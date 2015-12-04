@@ -90,6 +90,7 @@
     <ClInclude Include="..\Logging\include\LogEntry.h" />
     <ClInclude Include="..\Logging\include\LogScanner.h" />
     <ClInclude Include="..\Logging\include\LogSourceTracer.h" />
+    <ClInclude Include="..\Logging\include\TimeStruct.h" />
     <ClInclude Include="..\Logging\JavaLogFieldFilters.h" />
     <ClInclude Include="..\Logging\LogFilter.h" />
     <ClInclude Include="..\Logging\LogReader.h" />
