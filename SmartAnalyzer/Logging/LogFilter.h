@@ -20,13 +20,13 @@ namespace SmartAnalyzer
 			// (time && ( message || level )
 			vector<string> fieldFilterOpVec;
 			//each name should be in a regex name capture
-			sregex timeRegex;
+			string timeRegexStr;
 			sregex wholeRegex;
 			unsigned short moduleIndex;
-			LogFilter(string& timeRegexStr, string& regexStr, unsigned short moduleIndex_)
+			LogFilter(string& timeRegexStr_, string& regexStr, unsigned short moduleIndex_)
 			{
 				wholeRegex = sregex::compile(regexStr);
-				timeRegex = sregex::compile(timeRegexStr);
+				timeRegexStr = timeRegexStr_;
 				moduleIndex = moduleIndex_;
 			}
 

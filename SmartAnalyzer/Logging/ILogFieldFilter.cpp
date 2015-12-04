@@ -28,16 +28,17 @@ namespace SmartAnalyzer
 
 		bool TimeLogFieldFilter::Filter(const string& strField) const
 		{
-			TimeStruct timeField = ExtractTime(strField, m_timePatternRegex);
+			TimeStruct timeField = ExtractTime(strField, m_timePatternRegexStr);
 			return (timeField >= m_from && timeField <= m_to);
 		}
 
-		TimeStruct TimeLogFieldFilter::ExtractTime(const string& timeStrField, const sregex& timeRegex, bool bContainTime)
+		TimeStruct TimeLogFieldFilter::ExtractTime(const string& timeStrField, const string& timeRegexStr, bool bContainTime)
 		{
 			//Parse strField against its time regex to tm
 			smatch what;
 			tm tmField;
 			unsigned short milliseconds = 0;
+			sregex timeRegex = sregex::compile(timeRegexStr);
 			if (regex_search(timeStrField, what, timeRegex))
 			{
 				tmField.tm_year = stoi(what["year"]) - 1900;
@@ -58,6 +59,10 @@ namespace SmartAnalyzer
 					tmField.tm_hour = stoi(what["hour"]);
 					tmField.tm_min = stoi(what["min"]);
 					tmField.tm_sec = stoi(what["sec"]);
+					if (timeRegexStr.find("?P<ms>") != timeRegexStr.npos)
+					{
+						milliseconds = stoi(what["ms"]);
+					}
 				}
 				else
 				{
