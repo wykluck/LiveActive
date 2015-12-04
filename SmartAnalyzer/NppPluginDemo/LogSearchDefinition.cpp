@@ -51,15 +51,15 @@ void LogSearchDemo()
 		if (moduleLogResult.first == "all")
 		{
 			auto insertResult = moduleDocumentMap.insert(make_pair(moduleLogResult.first, shared_ptr<LogDocumentBase>(new MergedLogDocument(moduleLogResult.first,
-				logScanner.GetModuleIndexTracerMap()))));
+				logScanner.GetModuleNameTracerMap()))));
 			if (insertResult.second)
 				insertResult.first->second->ImportFrom(curScintillaInfo.handle, moduleLogResult.second);
 		}
 		else
 		{	
-			auto moduleIndexTraceMap = logScanner.GetModuleIndexTracerMap();
+			auto moduleNameTraceMap = logScanner.GetModuleNameTracerMap();
 			auto insertResult = moduleDocumentMap.insert(make_pair(moduleLogResult.first, shared_ptr<LogDocumentBase>(new ModuleLogDocument(moduleLogResult.first,
-				moduleIndexTraceMap[moduleLogResult.second.front().GetModuleIndex()]))));
+				moduleNameTraceMap[moduleLogResult.second.front().GetModuleName()]))));
 			if (insertResult.second)
 				insertResult.first->second->ImportFrom(curScintillaInfo.handle, moduleLogResult.second);
 		}
@@ -109,6 +109,20 @@ void LogSyncDemo()
 	if (moduleDocumentItr != moduleDocumentMap.end() && otherModuleDocumentItr != moduleDocumentMap.end())
 	{
 		moduleDocumentItr->second->SyncTimeWith(*otherModuleDocumentItr->second);
+	}
+}
+
+void LogSplitByThreadDemo()
+{
+	TCHAR path[256];
+	//find the current filename(moduleName) for the current view
+	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> utf16conv;
+	::SendMessage(nppData._nppHandle, NPPM_GETFILENAME, 0, (LPARAM)path);
+	auto moduleDocumentItr = moduleDocumentMap.find(utf16conv.to_bytes(path));
+
+	if (moduleDocumentItr != moduleDocumentMap.end())
+	{
+		moduleDocumentItr->second->Split();
 	}
 }
 

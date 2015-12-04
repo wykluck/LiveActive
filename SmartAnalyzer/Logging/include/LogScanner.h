@@ -20,7 +20,7 @@ namespace SmartAnalyzer
 			LogScanner(const string& baseDir, const string& patternFilePath);
 			virtual ~LogScanner();
 
-			const map<unsigned short, shared_ptr<LogSourceTracer>>& GetModuleIndexTracerMap();
+			const map<std::string, shared_ptr<LogSourceTracer>>& GetModuleNameTracerMap();
 
 
 			bool Scan(const string& filterFilePath, bool bSplitInModule);
@@ -52,7 +52,7 @@ namespace SmartAnalyzer
 			string m_baseDir;
 			map<string, RegexStruct> m_moduleLogPatternMap;
 			map<string, shared_ptr<LogFilter>> m_dirLogFilterMap;
-			map<unsigned short, shared_ptr<LogSourceTracer>> m_moduleIndexTracerMap;
+			map<string, shared_ptr<LogSourceTracer>> m_moduleNameTracerMap;
 			Status m_status;
 			map<string, shared_ptr<ILogResultProcessor>> m_moduleResultProcessorMap;
 			std::mutex m_mtx;

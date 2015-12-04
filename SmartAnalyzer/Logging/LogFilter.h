@@ -22,12 +22,12 @@ namespace SmartAnalyzer
 			//each name should be in a regex name capture
 			string timeRegexStr;
 			sregex wholeRegex;
-			unsigned short moduleIndex;
-			LogFilter(string& timeRegexStr_, string& regexStr, unsigned short moduleIndex_)
+			std::string moduleName;
+			LogFilter(string& timeRegexStr_, string& regexStr, const std::string& moduleName_)
 			{
 				wholeRegex = sregex::compile(regexStr);
 				timeRegexStr = timeRegexStr_;
-				moduleIndex = moduleIndex_;
+				moduleName = moduleName_;
 			}
 
 			bool Filter(const smatch& what) const
@@ -53,9 +53,9 @@ namespace SmartAnalyzer
 
 		};
 
-		std::shared_ptr<LogFilter> CreateJavaLogFilter(string& filterDesc, string& timeRegexStr, string& regexStr, unsigned short moduleIndex);
+		std::shared_ptr<LogFilter> CreateJavaLogFilter(string& filterDesc, string& timeRegexStr, string& regexStr, const string&  moduleName);
 
-		std::shared_ptr<LogFilter> CreateNginxLogFilter(string& filterDesc, string& timeRegexStr, string& regexStr, unsigned short moduleIndex);
+		std::shared_ptr<LogFilter> CreateNginxLogFilter(string& filterDesc, string& timeRegexStr, string& regexStr, const string&  moduleName);
 
 	}
 }

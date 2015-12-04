@@ -26,7 +26,6 @@ LogScanner::LogScanner(const string& baseDir, const string& patternFilePath)
 	if (jsonRootValue.isArray())
 	{
 		Json::ValueIterator jsonValueItr = jsonRootValue.begin();
-		unsigned short moduleIndex = 1;
 		while (jsonValueItr != jsonRootValue.end())
 		{
 			string moduleStr = (*jsonValueItr)["modulename"].asString();
@@ -35,10 +34,9 @@ LogScanner::LogScanner(const string& baseDir, const string& patternFilePath)
 			regexStruct.wholeRegexStr = (*jsonValueItr)["wholeregex"].asString();
 			regexStruct.type = (*jsonValueItr)["type"].asString();
 			regexStruct.dirPath = (*jsonValueItr)["pathpattern"].asString();
-			regexStruct.moduleIndex = moduleIndex++;
 			m_moduleLogPatternMap.insert(make_pair(moduleStr, regexStruct));
 
-			//construct m_moduleIndexTracerMap
+			//construct m_moduleNameTracerMap
 			Json::Value tracer = (*jsonValueItr)["tracer"];
 			TraceSourceInfo traceSourceInfo;
 			traceSourceInfo.sourceBaseDir = tracer["sourebasedir"].asString();
@@ -47,7 +45,7 @@ LogScanner::LogScanner(const string& baseDir, const string& patternFilePath)
 			traceSourceInfo.directRegex = tracer["directregex"].asString();
 			traceSourceInfo.openArgs = tracer["openargs"].asString();
 			shared_ptr<LogSourceTracer> logSourceTracerPtr(new LogSourceTracer(traceSourceInfo));
-			m_moduleIndexTracerMap.insert(make_pair(moduleIndex, logSourceTracerPtr));
+			m_moduleNameTracerMap.insert(make_pair(moduleStr, logSourceTracerPtr));
 
 			jsonValueItr++;
 		}
@@ -63,9 +61,9 @@ LogScanner::~LogScanner()
 
 }
 
-const map<unsigned short, shared_ptr<LogSourceTracer>>& LogScanner::GetModuleIndexTracerMap()
+const map<std::string, shared_ptr<LogSourceTracer>>& LogScanner::GetModuleNameTracerMap()
 {
-	return m_moduleIndexTracerMap;
+	return m_moduleNameTracerMap;
 }
 
 // You could also take an existing vector as a parameter.
@@ -137,14 +135,14 @@ bool LogScanner::ParseFilter(const string& filterFilePath)
 					//initialise a m_dirLogFilterMap from m_moduleLogPatternMap
 					if (itr->second.type == "java" && typeStr == itr->second.type)
 					{
-						auto pJavaLogFilter = CreateJavaLogFilter((*jsonValueItr)["filter"].asString(), itr->second.timeRegexStr, itr->second.wholeRegexStr, itr->second.moduleIndex);
+						auto pJavaLogFilter = CreateJavaLogFilter((*jsonValueItr)["filter"].asString(), itr->second.timeRegexStr, itr->second.wholeRegexStr, itr->first);
 						if (pJavaLogFilter.get() == NULL)
 							return false;
 						m_dirLogFilterMap.insert(make_pair(itr->second.dirPath, pJavaLogFilter));
 					}
 					else if (itr->second.type == "nginx" && typeStr == itr->second.type)
 					{
-						auto pNginxLogFilter = CreateNginxLogFilter((*jsonValueItr)["filter"].asString(), itr->second.timeRegexStr, itr->second.wholeRegexStr, itr->second.moduleIndex);
+						auto pNginxLogFilter = CreateNginxLogFilter((*jsonValueItr)["filter"].asString(), itr->second.timeRegexStr, itr->second.wholeRegexStr, itr->first);
 						if (pNginxLogFilter.get() == NULL)
 							return false;
 						m_dirLogFilterMap.insert(make_pair(itr->second.dirPath, pNginxLogFilter));				
@@ -160,14 +158,14 @@ bool LogScanner::ParseFilter(const string& filterFilePath)
 				//initialise a m_dirLogFilterMap from m_moduleLogPatternMap
 				if (itr->second.type == "java")
 				{
-					auto pJavaLogFilter = CreateJavaLogFilter((*jsonValueItr)["filter"].asString(), itr->second.timeRegexStr, itr->second.wholeRegexStr, itr->second.moduleIndex);
+					auto pJavaLogFilter = CreateJavaLogFilter((*jsonValueItr)["filter"].asString(), itr->second.timeRegexStr, itr->second.wholeRegexStr, itr->first);
 					if (pJavaLogFilter.get() == NULL)
 						return false;
 					m_dirLogFilterMap.insert(make_pair(itr->second.dirPath, pJavaLogFilter));
 				}
 				else if (itr->second.type == "nginx")
 				{
-					auto pNginxLogFilter = CreateNginxLogFilter((*jsonValueItr)["filter"].asString(), itr->second.timeRegexStr, itr->second.wholeRegexStr, itr->second.moduleIndex);
+					auto pNginxLogFilter = CreateNginxLogFilter((*jsonValueItr)["filter"].asString(), itr->second.timeRegexStr, itr->second.wholeRegexStr, itr->first);
 					if (pNginxLogFilter.get() == NULL)
 						return false;
 					m_dirLogFilterMap.insert(make_pair(itr->second.dirPath, pNginxLogFilter));

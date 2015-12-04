@@ -9,8 +9,8 @@ namespace SmartAnalyzer
 		class MergedLogDocument : public LogDocumentBase
 		{
 		public:
-			MergedLogDocument(const std::string& moduleName, const std::map<unsigned short, std::shared_ptr<Logging::LogSourceTracer>>& moduleIndexTracerMap)
-				: LogDocumentBase(moduleName), m_moduleIndexTracerMap(moduleIndexTracerMap)
+			MergedLogDocument(const std::string& moduleName, const std::map<std::string, std::shared_ptr<Logging::LogSourceTracer>>& moduleIndexTracerMap)
+				: LogDocumentBase(moduleName), m_moduleNameTracerMap(moduleIndexTracerMap)
 			{
 
 			}
@@ -18,18 +18,19 @@ namespace SmartAnalyzer
 			virtual void ImportFrom(HWND curScintilla, std::deque<Logging::LogEntry>& logResultQueue);
 			virtual void Trace();
 			virtual void SyncTimeWith(LogDocumentBase& other);
+			virtual void Split();
 
 		private:
 			struct LineGroupModuleInfo
 			{
 				unsigned int startLine;
 				unsigned int endLine;
-				unsigned short moduleIndex;
+				std::string moduleName;
 			};
 
 			
 			std::vector<LineGroupModuleInfo> m_lineGroupModuleInfoVec;
-			std::map<unsigned short, std::shared_ptr<Logging::LogSourceTracer>> m_moduleIndexTracerMap;
+			std::map<std::string, std::shared_ptr<Logging::LogSourceTracer>> m_moduleNameTracerMap;
 		};
 	}
 }

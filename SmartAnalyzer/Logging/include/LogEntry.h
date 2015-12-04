@@ -8,20 +8,20 @@ namespace SmartAnalyzer
 		class LogEntry
 		{
 		public:
-			LogEntry(const TimeStruct& timeField, const std::string& logString, unsigned short moduleIndex) 
-				: m_timeField(timeField), m_logString(logString), m_moduleIndex(moduleIndex)
+			LogEntry(const TimeStruct& timeField, const std::string& logString, const std::string& moduleName) 
+				: m_timeField(timeField), m_logString(logString), m_moduleName(moduleName)
 			{};
 			virtual ~LogEntry() {};
 
 			LogEntry(LogEntry&& other)
 				: m_timeField(other.m_timeField),
 				m_logString(std::move(other.m_logString)),
-				m_moduleIndex(other.m_moduleIndex)
+				m_moduleName(other.m_moduleName)
 			{};
 			LogEntry& operator=(LogEntry&& other) {
 				m_timeField = other.m_timeField;
 				m_logString = std::move(other.m_logString);
-				m_moduleIndex = other.m_moduleIndex;
+				m_moduleName = other.m_moduleName;
 				return *this;
 			}
 			const TimeStruct& GetLogTime() const
@@ -36,9 +36,9 @@ namespace SmartAnalyzer
 			{
 				return m_logString;
 			}
-			const unsigned short GetModuleIndex()
+			const std::string& GetModuleName()
 			{
-				return m_moduleIndex;
+				return m_moduleName;
 			}
 			const std::string& GetLogThreadId()
 			{
@@ -47,7 +47,7 @@ namespace SmartAnalyzer
 		private:
 			std::string m_logString;
 			TimeStruct m_timeField;
-			unsigned short m_moduleIndex;
+			std::string m_moduleName;
 			std::string m_threadId;
 		};
 	}

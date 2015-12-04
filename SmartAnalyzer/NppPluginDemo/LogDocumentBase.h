@@ -31,6 +31,8 @@ namespace SmartAnalyzer
 			virtual void ImportFrom(HWND curScintilla, std::deque<SmartAnalyzer::Logging::LogEntry>& logResultQueue) = 0;
 			virtual void Trace() = 0;
 			virtual void SyncTimeWith(LogDocumentBase& other) = 0;
+			virtual void Split() = 0;
+
 			static ScintillaInfo GetCurrentScintillaInfo();
 			static ScintillaInfo GetOtherScintillaInfo();
 

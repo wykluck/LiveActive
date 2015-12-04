@@ -40,7 +40,7 @@ void LogReader::Read(const string& filePath, const shared_ptr<LogFilter> pLogFil
 			{
 				//extract time from the log entry
 				TimeStruct timeField = TimeLogFieldFilter::ExtractTime(what[TIME_FILTER_NAME], pLogFilter->timeRegexStr);
-				LogEntry logEntry(timeField, lineBuffer, pLogFilter->moduleIndex);
+				LogEntry logEntry(timeField, lineBuffer, pLogFilter->moduleName);
 				pThreadResQueue->push_back(logEntry);
 				isPreviousLineInFilter = true;
 			}

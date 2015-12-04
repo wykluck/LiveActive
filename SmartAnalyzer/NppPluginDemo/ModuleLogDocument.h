@@ -3,6 +3,7 @@
 #include "LogSourceTracer.h"
 #include "TimeStruct.h"
 #include <map>
+#include <set>
 namespace SmartAnalyzer
 {
 	namespace NPPLogging
@@ -19,7 +20,8 @@ namespace SmartAnalyzer
 			virtual void ImportFrom(HWND curScintilla, std::deque<Logging::LogEntry>& logResultQueue);
 			virtual void Trace();
 			virtual void SyncTimeWith(LogDocumentBase& other);
-
+			virtual void Split();
+			
 			
 		private:
 			struct LineStructInfo
@@ -32,6 +34,7 @@ namespace SmartAnalyzer
 			std::map<Logging::TimeStruct, unsigned int> m_timeLineNumberMap;
 			std::map<unsigned int, LineStructInfo> m_lineStructMap;
 			std::shared_ptr<Logging::LogSourceTracer> m_tracerPtr;
+			std::set<string> m_threadIdSet;
 		};
 	}
 }

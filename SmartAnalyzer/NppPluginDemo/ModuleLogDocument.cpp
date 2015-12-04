@@ -20,10 +20,16 @@ namespace SmartAnalyzer
 				unsigned int curLineNo = ImportFromInternal(curScintilla, logStr);
 
 				//construct m_lineStructMap
-				LineStructInfo lineStructInfo = { logResultQueue.front().GetLogTime(), logResultQueue.front().GetLogThreadId() };
+				const string& logThreadId = logResultQueue.front().GetLogThreadId();
+				LineStructInfo lineStructInfo = { logResultQueue.front().GetLogTime(), logThreadId };
 				m_lineStructMap.insert(make_pair(curLineNo, lineStructInfo));
 				//Assign the latest if the time key are the same 
 				m_timeLineNumberMap[logResultQueue.front().GetLogTime()] = curLineNo;
+
+				if (m_threadIdSet.find(logThreadId) == m_threadIdSet.end())
+				{
+					m_threadIdSet.insert(logThreadId);
+				}
 
 				logResultQueue.pop_front();
 			}
@@ -83,6 +89,16 @@ namespace SmartAnalyzer
 			
 		}
 
-	
+		void ModuleLogDocument::Split()
+		{
+			if (m_threadIdSet.size() <= 1)
+			{
+				//either no thread or only one thread; no need to split
+				return;
+			}
+
+
+		}
+
 	}
 }

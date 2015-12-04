@@ -6,7 +6,7 @@ namespace SmartAnalyzer
 {
 	namespace NPPLogging
 	{
-		unsigned short prevModuleIndex = 0;
+		std::string prevModuleName;
 		void MergedLogDocument::ImportFrom(HWND curScintilla, std::deque<Logging::LogEntry>& logResultQueue)
 		{
 
@@ -16,14 +16,14 @@ namespace SmartAnalyzer
 				logStr.append("\n");
 				unsigned int curLineNo = ImportFromInternal(curScintilla, logStr);
 
-				if (logResultQueue.front().GetModuleIndex() != prevModuleIndex)
+				if (logResultQueue.front().GetModuleName() != prevModuleName)
 				{
 					//create a new LineGroupInfo and insert to the lineGroupModuleIndexMap
 					LineGroupModuleInfo lineGroupModuleInfo;
 					lineGroupModuleInfo.startLine = lineGroupModuleInfo.endLine = curLineNo;
-					lineGroupModuleInfo.moduleIndex = logResultQueue.front().GetModuleIndex();
+					lineGroupModuleInfo.moduleName = logResultQueue.front().GetModuleName();
 					m_lineGroupModuleInfoVec.push_back(lineGroupModuleInfo);
-					prevModuleIndex = lineGroupModuleInfo.moduleIndex;
+					prevModuleName = lineGroupModuleInfo.moduleName;
 				}
 				else
 				{
@@ -47,8 +47,8 @@ namespace SmartAnalyzer
 			{
 				if (curLineNo >= lineGroupModuleInfo.startLine || curLineNo <= lineGroupModuleInfo.endLine)
 				{
-					auto moduleItr = m_moduleIndexTracerMap.find(lineGroupModuleInfo.moduleIndex);
-					if (moduleItr != m_moduleIndexTracerMap.end())
+					auto moduleItr = m_moduleNameTracerMap.find(lineGroupModuleInfo.moduleName);
+					if (moduleItr != m_moduleNameTracerMap.end())
 					{
 						return TraceInternal(moduleItr->second);
 					}
@@ -62,5 +62,11 @@ namespace SmartAnalyzer
 		}
 
 	
+		void MergedLogDocument::Split()
+		{
+			//TODO: To be implemented
+
+			return;
+		}
 	}
 }
