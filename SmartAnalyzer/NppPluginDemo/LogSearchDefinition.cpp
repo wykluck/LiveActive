@@ -37,7 +37,6 @@ void LogSearchDemo()
 	//1.according logScanner generate docindex to LogDocumentBase Map
 	//2.call to individual LogDocumentBase's importfrom to append logentries
 	auto moduleLogResultMap = logScanner.RetrieveResults();
-	string logSearchDir = "c:\\Temp\\logsearch\\";
 	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> utf16conv;
 	for (auto moduleLogResult : moduleLogResultMap)
 	{
@@ -65,7 +64,7 @@ void LogSearchDemo()
 		}
 		
 		//save it to a file named with module name
-		string logsearchFilePath = logSearchDir;
+		string logsearchFilePath = LogSaveDir;
 		logsearchFilePath.append(moduleLogResult.first);
 		
 		std::wstring wlogsearchFilePath = utf16conv.from_bytes(logsearchFilePath);
@@ -85,9 +84,9 @@ void LogTraceDemo()
 	TCHAR path[256];
 	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> utf16conv;
 	::SendMessage(nppData._nppHandle, NPPM_GETFILENAME, 0, (LPARAM)path);
-	auto docIndexDocumentItr = moduleDocumentMap.find(utf16conv.to_bytes(path));
-	if (docIndexDocumentItr != moduleDocumentMap.end())
-		docIndexDocumentItr->second->Trace();
+	auto moduleDocumentItr = moduleDocumentMap.find(utf16conv.to_bytes(path));
+	if (moduleDocumentItr != moduleDocumentMap.end())
+		moduleDocumentItr->second->Trace();
 
 }
 
@@ -112,7 +111,7 @@ void LogSyncDemo()
 	}
 }
 
-void LogSplitByThreadDemo()
+void LogSplitDemo()
 {
 	TCHAR path[256];
 	//find the current filename(moduleName) for the current view
@@ -122,7 +121,12 @@ void LogSplitByThreadDemo()
 
 	if (moduleDocumentItr != moduleDocumentMap.end())
 	{
-		moduleDocumentItr->second->Split();
+		auto splitDocMap = moduleDocumentItr->second->Split();
+		if (!splitDocMap.empty())
+		{
+			//merge the split doc map to moduleDocumentMap
+			moduleDocumentMap.insert(splitDocMap.begin(), splitDocMap.end());
+		}
 	}
 }
 

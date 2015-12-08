@@ -13,6 +13,7 @@ namespace SmartAnalyzer
 
 			const std::string LEVEL_FILTER_NAME = "level";
 			const std::string MESSAGE_FILTER_NAME = "message";
+			const std::string THREAD_FILTER_NAME = "thread";
 
 			class MessageLogFieldFilter : public ILogFieldFilter
 			{
@@ -94,6 +95,12 @@ namespace SmartAnalyzer
 				static map<string, LevelLogFieldFilter::Level> LevelLogFieldFilter::CreateLogLevelStrEnumMap();
 				static map<string, Level> s_LogLevelStrEnumMap;
 				Level m_threshold;
+			};
+
+			class ThreadLogFieldFilter : public ILogFieldFilter
+			{
+			public:
+				static TimeStruct ExtractThreadId(const string& timeStrField, const string& timeRegexStr, bool bContainTime = true);
 			};
 		}
 	}

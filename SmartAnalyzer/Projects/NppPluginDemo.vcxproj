@@ -118,6 +118,7 @@ copy $(OutDir)NppPluginDemo.dll "C:\Program Files (x86)\Notepad++\plugins"</Comm
     <ClCompile Include="..\NppPluginDemo\ModuleLogDocument.cpp" />
     <ClCompile Include="..\NppPluginDemo\NppPluginDemo.cpp" />
     <ClCompile Include="..\NppPluginDemo\PluginDefinition.cpp" />
+    <ClCompile Include="..\NppPluginDemo\ThreadLogDocument.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\NppPluginDemo\DockingFeature\DockingDlgInterface.h" />
@@ -134,6 +135,7 @@ copy $(OutDir)NppPluginDemo.dll "C:\Program Files (x86)\Notepad++\plugins"</Comm
     <ClInclude Include="..\NppPluginDemo\PluginInterface.h" />
     <ClInclude Include="..\NppPluginDemo\Scintilla.h" />
     <ClInclude Include="..\NppPluginDemo\Sci_Position.h" />
+    <ClInclude Include="..\NppPluginDemo\ThreadLogDocument.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\NppPluginDemo\DockingFeature\goLine.rc" />

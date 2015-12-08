@@ -144,6 +144,7 @@ void commandMenuInit()
 
 	setCommand(14, TEXT("Log Search Demo"), LogSearchDemo, NULL, false);
 	setCommand(DOCKABLE_DEMO_INDEX, TEXT("Log Trace Demo"), LogTraceDemo, NULL, false);
+	setCommand(16, TEXT("Log Split Demo"), LogSplitDemo, NULL, false);
 
 	
 

@@ -52,7 +52,7 @@ namespace SmartAnalyzer
 		
 		unsigned int LogDocumentBase::ImportFromInternal(HWND curScintilla, const std::string& logStr)
 		{
-			unsigned //go to the end of document and get line number
+			//go to the end of document and get line number
 			unsigned int length = ::SendMessage(curScintilla, SCI_GETLENGTH, 0, 0);
 			::SendMessage(curScintilla, SCI_GOTOPOS, length, 0);
 			unsigned int pos = ::SendMessage(curScintilla, SCI_GETCURRENTPOS, 0, 0);

@@ -32,7 +32,8 @@ void LogReader::Read(const string& filePath, const shared_ptr<LogFilter> pLogFil
 		//match the lineBuffer with a regex specified by a filter
 		string lineStr(lineBuffer);
 		
-		if (regex_search(lineStr, what, pLogFilter->wholeRegex))
+		sregex wholeRegex = sregex::compile(pLogFilter->wholeRegexStr);
+		if (regex_search(lineStr, what, wholeRegex))
 		{
 			bool result = pLogFilter->Filter(what);
 			
@@ -40,7 +41,11 @@ void LogReader::Read(const string& filePath, const shared_ptr<LogFilter> pLogFil
 			{
 				//extract time from the log entry
 				TimeStruct timeField = TimeLogFieldFilter::ExtractTime(what[TIME_FILTER_NAME], pLogFilter->timeRegexStr);
-				LogEntry logEntry(timeField, lineBuffer, pLogFilter->moduleName);
+				//extract thread from the log entry if presented
+				string threadId = "";
+				if (pLogFilter->wholeRegexStr.find("?P<thread>") != pLogFilter->wholeRegexStr.npos)
+					threadId = what[Java::THREAD_FILTER_NAME];
+				LogEntry logEntry(timeField, threadId, lineBuffer, pLogFilter->moduleName);
 				pThreadResQueue->push_back(logEntry);
 				isPreviousLineInFilter = true;
 			}

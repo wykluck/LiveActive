@@ -62,11 +62,10 @@ namespace SmartAnalyzer
 		}
 
 	
-		void MergedLogDocument::Split()
+		std::map<string, shared_ptr<LogDocumentBase>> MergedLogDocument::Split()
 		{
 			//TODO: To be implemented
-
-			return;
+			return std::map<string, shared_ptr<LogDocumentBase>>();
 		}
 	}
 }

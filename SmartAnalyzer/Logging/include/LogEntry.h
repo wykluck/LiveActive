@@ -8,20 +8,22 @@ namespace SmartAnalyzer
 		class LogEntry
 		{
 		public:
-			LogEntry(const TimeStruct& timeField, const std::string& logString, const std::string& moduleName) 
-				: m_timeField(timeField), m_logString(logString), m_moduleName(moduleName)
+			LogEntry(const TimeStruct& timeField, const std::string& threadId, const std::string& logString, const std::string& moduleName) 
+				: m_timeField(timeField), m_logString(logString), m_moduleName(moduleName), m_threadId(threadId)
 			{};
 			virtual ~LogEntry() {};
 
 			LogEntry(LogEntry&& other)
 				: m_timeField(other.m_timeField),
 				m_logString(std::move(other.m_logString)),
-				m_moduleName(other.m_moduleName)
+				m_moduleName(other.m_moduleName),
+				m_threadId(std::move(other.m_threadId))
 			{};
 			LogEntry& operator=(LogEntry&& other) {
 				m_timeField = other.m_timeField;
 				m_logString = std::move(other.m_logString);
 				m_moduleName = other.m_moduleName;
+				m_threadId = std::move(other.m_threadId);
 				return *this;
 			}
 			const TimeStruct& GetLogTime() const

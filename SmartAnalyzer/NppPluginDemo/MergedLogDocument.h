@@ -18,7 +18,7 @@ namespace SmartAnalyzer
 			virtual void ImportFrom(HWND curScintilla, std::deque<Logging::LogEntry>& logResultQueue);
 			virtual void Trace();
 			virtual void SyncTimeWith(LogDocumentBase& other);
-			virtual void Split();
+			virtual std::map<string, shared_ptr<LogDocumentBase>> Split();
 
 		private:
 			struct LineGroupModuleInfo

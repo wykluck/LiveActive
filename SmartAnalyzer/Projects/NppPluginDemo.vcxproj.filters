@@ -39,6 +39,9 @@
     <ClCompile Include="..\NppPluginDemo\LogDocumentBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\NppPluginDemo\ThreadLogDocument.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\NppPluginDemo\DockingFeature\DockingDlgInterface.h">
@@ -81,6 +84,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\NppPluginDemo\Sci_Position.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NppPluginDemo\ThreadLogDocument.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

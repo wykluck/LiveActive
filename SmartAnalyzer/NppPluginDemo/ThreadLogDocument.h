@@ -8,33 +8,26 @@ namespace SmartAnalyzer
 {
 	namespace NPPLogging
 	{
-		class ModuleLogDocument : public LogDocumentBase
+		class ThreadLogDocument : public LogDocumentBase
 		{
 		public:
-			ModuleLogDocument(const std::string& moduleName, std::shared_ptr<Logging::LogSourceTracer> tracerPtr)
+			ThreadLogDocument(const std::string& moduleName, std::shared_ptr<Logging::LogSourceTracer> tracerPtr)
 				: LogDocumentBase(moduleName), m_tracerPtr(tracerPtr)
 			{
 
 			}
-			virtual ~ModuleLogDocument(){};
+			virtual ~ThreadLogDocument(){};
 			virtual void ImportFrom(HWND curScintilla, std::deque<Logging::LogEntry>& logResultQueue);
 			virtual void Trace();
 			virtual void SyncTimeWith(LogDocumentBase& other);
 			virtual std::map<string, shared_ptr<LogDocumentBase>> Split();
-			
-			
-		private:
-			struct LineStructInfo
-			{
-				Logging::TimeStruct logTime;
-				string logThreadId;
-			};
 
+			void UpdateMaps(const Logging::TimeStruct& time, unsigned int lineNo);
+		private:
 			unsigned int FindNearestLine(const Logging::TimeStruct& time);
 			std::map<Logging::TimeStruct, unsigned int> m_timeLineNumberMap;
-			std::map<unsigned int, LineStructInfo> m_lineStructMap;
+			std::map<unsigned int, Logging::TimeStruct> m_lineStructMap;
 			std::shared_ptr<Logging::LogSourceTracer> m_tracerPtr;
-			std::set<string> m_threadIdSet;
 		};
 	}
 }

@@ -36,7 +36,7 @@ const TCHAR NPP_PLUGIN_NAME[] = TEXT("Notepad++ plugin demo");
 //
 // Here define the number of your plugin commands
 //
-const int nbFunc = 16;
+const int nbFunc = 17;
 
 
 //
@@ -88,6 +88,7 @@ void DockableDlgDemo();
 void LogSearchDemo();
 void LogTraceDemo();
 void LogSyncDemo();
+void LogSplitDemo();
 
 
 #endif //PLUGINDEFINITION_H
