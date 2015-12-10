@@ -1,7 +1,13 @@
 #pragma once
+#include "PluginInterface.h"
 #include "MergedLogDocument.h"
 #include "Scintilla.h"
+#include "Notepad_plus_msgs.h"
+#include "ModuleLogDocument.h"
+#include "menuCmdID.h"
+#include <codecvt>
 
+extern NppData nppData;
 namespace SmartAnalyzer
 {
 	namespace NPPLogging
@@ -13,15 +19,17 @@ namespace SmartAnalyzer
 			while (!logResultQueue.empty())
 			{
 				string logStr = logResultQueue.front().GetLogString();
-				logStr.append("\n");
+				if (logStr.back() != '\n')
+					logStr.append("\n");
 				unsigned int curLineNo = ImportFromInternal(curScintilla, logStr);
 
-				if (logResultQueue.front().GetModuleName() != prevModuleName)
+				const string& curModuleName = logResultQueue.front().GetModuleName();
+				if (curModuleName != prevModuleName)
 				{
 					//create a new LineGroupInfo and insert to the lineGroupModuleIndexMap
 					LineGroupModuleInfo lineGroupModuleInfo;
 					lineGroupModuleInfo.startLine = lineGroupModuleInfo.endLine = curLineNo;
-					lineGroupModuleInfo.moduleName = logResultQueue.front().GetModuleName();
+					lineGroupModuleInfo.moduleName = curModuleName;
 					m_lineGroupModuleInfoVec.push_back(lineGroupModuleInfo);
 					prevModuleName = lineGroupModuleInfo.moduleName;
 				}
@@ -64,8 +72,9 @@ namespace SmartAnalyzer
 	
 		std::map<string, shared_ptr<LogDocumentBase>> MergedLogDocument::Split()
 		{
-			//TODO: To be implemented
-			return std::map<string, shared_ptr<LogDocumentBase>>();
+			//due to the time information is not stored in the MergedLogDocument, not implemment this function.
+			std::map<string, shared_ptr<LogDocumentBase>> resultSplitDocMap;
+			return resultSplitDocMap;
 		}
 	}
 }

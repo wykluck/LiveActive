@@ -18,7 +18,8 @@ namespace SmartAnalyzer
 			while (!logResultQueue.empty())
 			{
 				string logStr = logResultQueue.front().GetLogString();
-				logStr.append("\n");
+				if (logStr.back() != '\n')
+					logStr.append("\n");
 				unsigned int curLineNo = ImportFromInternal(curScintilla, logStr);
 
 				//construct m_lineStructMap
@@ -129,8 +130,9 @@ namespace SmartAnalyzer
 				{
 					int copiedCharNum = ::SendMessage(curScintillaInfo.handle, SCI_GETLINE, i, (LPARAM)lineBuffer);
 					lineBuffer[copiedCharNum] = '\0';
+					copyBuffer.append(lineBuffer);
 				}
-				copyBuffer.append(lineBuffer);
+				
 
 				//move to the correct thread related tab to paste 
 				auto threadIdModuleItr = threadIdDocStructMap.find(lineStructItr->second.logThreadId);

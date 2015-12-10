@@ -26,6 +26,20 @@ namespace SmartAnalyzer
 				m_threadId = std::move(other.m_threadId);
 				return *this;
 			}
+			LogEntry(const LogEntry& other)
+				: m_timeField(other.m_timeField),
+				m_logString(other.m_logString),
+				m_moduleName(other.m_moduleName),
+				m_threadId(other.m_threadId)
+			{};
+			LogEntry& operator=(const LogEntry& other) {
+				m_timeField = other.m_timeField;
+				m_logString = other.m_logString;
+				m_moduleName = other.m_moduleName;
+				m_threadId = other.m_threadId;
+				return *this;
+			}
+
 			const TimeStruct& GetLogTime() const
 			{
 				return m_timeField;
