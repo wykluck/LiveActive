@@ -4,9 +4,11 @@
   <PropertyGroup Label="UserMacros">
     <THIRDPARTY_DIR>D:\3party</THIRDPARTY_DIR>
     <BOOST_INCLUDE_DIR>$(THIRDPARTY_DIR)\boost_1_59_0</BOOST_INCLUDE_DIR>
-    <BOOST_LIB_DIR>$(THIRDPARTY_DIR)\boost_1_59_0\lib32-msvc-12.0</BOOST_LIB_DIR>
+    <BOOST_LIB_DIR>$(THIRDPARTY_DIR)\boost_1_59_0\lib32-msvc-$(VisualStudioVersion)</BOOST_LIB_DIR>
     <JSONCPP_BASE_DIR>..\jsoncpp</JSONCPP_BASE_DIR>
     <BUILD_BASE_DIR>$(SolutionDir)..\..\staging\</BUILD_BASE_DIR>
+    <BSCSDK_INCLUDE_DIR>$(THIRDPARTY_DIR)\bscsdk\include</BSCSDK_INCLUDE_DIR>
+    <BSCSDK_LIB_DIR>$(THIRDPARTY_DIR)\bscsdk\lib</BSCSDK_LIB_DIR>
   </PropertyGroup>
   <PropertyGroup>
     <OutDir>$(SolutionDir)..\..\staging\public\bin\$(PlatformName)$(Configuration)\</OutDir>
@@ -35,6 +37,12 @@
     </BuildMacro>
     <BuildMacro Include="BUILD_BASE_DIR">
       <Value>$(BUILD_BASE_DIR)</Value>
+    </BuildMacro>
+    <BuildMacro Include="BSCSDK_INCLUDE_DIR">
+      <Value>$(BSCSDK_INCLUDE_DIR)</Value>
+    </BuildMacro>
+    <BuildMacro Include="BSCSDK_LIB_DIR">
+      <Value>$(BSCSDK_LIB_DIR)</Value>
     </BuildMacro>
   </ItemGroup>
 </Project>
