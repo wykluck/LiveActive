@@ -6,12 +6,12 @@
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/classification.hpp>
 #include <codecvt>
-#include <boost/process.hpp>
+//#include <boost/process.hpp>
 #include <boost/filesystem.hpp>
 
 
-using namespace boost::process;
-using namespace boost::process::initializers;
+//using namespace boost::process;
+//using namespace boost::process::initializers;
 using namespace boost::filesystem;
 using namespace SmartAnalyzer::Logging;
 
@@ -88,7 +88,7 @@ namespace SmartAnalyzer
 					std::wstring utf16 = utf16conv.from_bytes(arg);
 					wArgVec.push_back(utf16);
 				}
-				execute(set_args(wArgVec));
+				//execute(set_args(wArgVec));
 			}
 
 			return;

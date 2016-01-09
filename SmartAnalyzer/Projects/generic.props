@@ -2,13 +2,14 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros">
-    <THIRDPARTY_DIR>D:\3party</THIRDPARTY_DIR>
+    <THIRDPARTY_DIR>$(SolutionDir)..\..\3party</THIRDPARTY_DIR>
     <BOOST_INCLUDE_DIR>$(THIRDPARTY_DIR)\boost_1_59_0</BOOST_INCLUDE_DIR>
     <BOOST_LIB_DIR>$(THIRDPARTY_DIR)\boost_1_59_0\lib32-msvc-$(VisualStudioVersion)</BOOST_LIB_DIR>
     <JSONCPP_BASE_DIR>..\jsoncpp</JSONCPP_BASE_DIR>
     <BUILD_BASE_DIR>$(SolutionDir)..\..\staging\</BUILD_BASE_DIR>
-    <BSCSDK_INCLUDE_DIR>$(THIRDPARTY_DIR)\bscsdk\include</BSCSDK_INCLUDE_DIR>
-    <BSCSDK_LIB_DIR>$(THIRDPARTY_DIR)\bscsdk\lib</BSCSDK_LIB_DIR>
+    <BSCSDK_INCLUDE_DIR>$(THIRDPARTY_DIR)\bsckit70\bscsdk\include</BSCSDK_INCLUDE_DIR>
+    <BSCSDK_LIB_DIR>$(THIRDPARTY_DIR)\bsckit70\bscsdk\lib</BSCSDK_LIB_DIR>
+    <BSCSDK_BIN_DIR>$(THIRDPARTY_DIR)\bsckit70\bscsdk\bin</BSCSDK_BIN_DIR>
   </PropertyGroup>
   <PropertyGroup>
     <OutDir>$(SolutionDir)..\..\staging\public\bin\$(PlatformName)$(Configuration)\</OutDir>
@@ -43,6 +44,9 @@
     </BuildMacro>
     <BuildMacro Include="BSCSDK_LIB_DIR">
       <Value>$(BSCSDK_LIB_DIR)</Value>
+    </BuildMacro>
+    <BuildMacro Include="BSCSDK_BIN_DIR">
+      <Value>$(BSCSDK_BIN_DIR)</Value>
     </BuildMacro>
   </ItemGroup>
 </Project>

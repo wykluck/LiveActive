@@ -1,5 +1,6 @@
 staging/
 utils/
+3party/boost_1_59_0
 *.sdf
 *.suo
 *.opensdf

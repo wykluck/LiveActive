@@ -139,7 +139,7 @@
       <AdditionalDependencies>msbsc70.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(THIRDPARTY_DIR)\bscsdk\bin\*.dll $(OutDir)</Command>
+      <Command>copy $(BSCSDK_BIN_DIR)\*.dll $(OutDir)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
