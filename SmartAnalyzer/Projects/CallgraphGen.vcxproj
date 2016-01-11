@@ -127,7 +127,7 @@
       <IntrinsicFunctions>false</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;WINNT=1;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(BSCSDK_INCLUDE_DIR);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <ShowIncludes>true</ShowIncludes>
+      <ShowIncludes>false</ShowIncludes>
       <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
@@ -160,7 +160,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\CallgraphGen\CallgraphGen.cpp" />
+    <ClCompile Include="..\CallgraphGen\FunctionExtractor.cpp" />
     <ClCompile Include="..\CallgraphGen\main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\CallgraphGen\FuncDefinition.h" />
+    <ClInclude Include="..\CallgraphGen\FunctionExtractor.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

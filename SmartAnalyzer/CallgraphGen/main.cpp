@@ -17,7 +17,7 @@ void DumpDervs(IINST iinst);
 Bsc *pbsc;
 MBF mbf = mbfAll;
 
-void main(int argc, char **argv)
+void __main(int argc, char **argv)
 {
 	if (argc < 2) {
 		printf("\nUsage: bd foo.bsc [options|symname]\n\n");
