@@ -129,6 +129,7 @@
       <AdditionalIncludeDirectories>$(BSCSDK_INCLUDE_DIR);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShowIncludes>false</ShowIncludes>
       <WholeProgramOptimization>false</WholeProgramOptimization>
+      <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -141,6 +142,9 @@
     <PostBuildEvent>
       <Command>copy $(BSCSDK_BIN_DIR)\*.dll $(OutDir)</Command>
     </PostBuildEvent>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -161,12 +165,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\CallgraphGen\CallgraphGen.cpp" />
-    <ClCompile Include="..\CallgraphGen\FunctionExtractor.cpp" />
+    <ClCompile Include="..\CallgraphGen\FuncExtractor.cpp" />
+    <ClCompile Include="..\CallgraphGen\GraphGenerator.cpp" />
     <ClCompile Include="..\CallgraphGen\main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\CallgraphGen\FuncDefinition.h" />
-    <ClInclude Include="..\CallgraphGen\FunctionExtractor.h" />
+    <ClInclude Include="..\CallgraphGen\FuncExtractor.h" />
+    <ClInclude Include="..\CallgraphGen\GraphGenerator.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

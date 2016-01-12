@@ -18,18 +18,24 @@
     <ClCompile Include="..\CallgraphGen\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\CallgraphGen\FunctionExtractor.cpp">
+    <ClCompile Include="..\CallgraphGen\CallgraphGen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\CallgraphGen\CallgraphGen.cpp">
+    <ClCompile Include="..\CallgraphGen\FuncExtractor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CallgraphGen\GraphGenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\CallgraphGen\FunctionExtractor.h">
+    <ClInclude Include="..\CallgraphGen\FuncDefinition.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\CallgraphGen\FuncDefinition.h">
+    <ClInclude Include="..\CallgraphGen\FuncExtractor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CallgraphGen\GraphGenerator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
