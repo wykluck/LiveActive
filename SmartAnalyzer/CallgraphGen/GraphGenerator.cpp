@@ -1,8 +1,11 @@
 #include "GraphGenerator.h"
+#include "FuncDefinition.h"
+#include <fstream>
 #include <utility> 
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/dijkstra_shortest_paths.hpp>
+#include <boost/graph/graphviz.hpp>
 
 using namespace boost;
 using namespace SmartAnalyzer::CallGraph;
@@ -20,15 +23,32 @@ GraphGenerator::~GraphGenerator()
 bool GraphGenerator::Generate(const FuncExtractResult& funcExtractResult, const std::string& outputFilePath)
 {
 	// create a typedef for the Graph type
-	typedef adjacency_list<vecS, vecS, directedS> Graph;
+	typedef adjacency_list<vecS, vecS, directedS, FuncDefinition, FuncCall> Graph;
 
-	/*Graph g(funcExtractResult.m_funcDefMap.size());
-
+	Graph g;
+	std::map<int, Graph::vertex_descriptor> idVertexDescMap;
+	// add vertices from funcExtractResult.m_funcDefMap
 	for (auto itr = funcExtractResult.m_funcDefMap.begin(); itr != funcExtractResult.m_funcDefMap.end(); itr++)
 	{
-		Graph::vertex_descriptor vertex = boost::add_vertex(g);
-		vertex.
+		Graph::vertex_descriptor vDes = boost::add_vertex(g);
+		g[vDes] = itr->second;
+		idVertexDescMap[itr->second.m_id] = vDes;
 	}
-	*/
+	
+	//add edges from funcExtractResult.m_funcCallVec
+	for (auto itr = funcExtractResult.m_funcCallVec.begin(); itr != funcExtractResult.m_funcCallVec.end(); itr++)
+	{
+		Graph::vertex_descriptor u = idVertexDescMap[itr->m_sourceId];
+		Graph::vertex_descriptor v = idVertexDescMap[itr->m_targetId];
+		auto res = boost::add_edge(u, v, g);
+		if (res.second)
+			g[res.first] = *itr;
+	}
+
+	idVertexDescMap.clear();
+
+	std::ofstream fout(outputFilePath.c_str());
+	boost::write_graphviz(fout, g, make_label_writer(boost::get(&FuncDefinition::m_fullQualifiedName, g)));
+
 	return true;
 }

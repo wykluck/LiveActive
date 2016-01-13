@@ -1,4 +1,5 @@
 #include "FuncExtractor.h"
+#include "Dbghelp.h"
 #include <boost/xpressive/xpressive.hpp>
 
 using namespace SmartAnalyzer::CallGraph;
@@ -31,15 +32,20 @@ FuncExtractResult FuncExtractor::Extract(const std::set<std::string>& functionIn
 	}
 	
 	FuncExtractResult result;
-	sregex funcRegex = sregex::compile("(?P<func>.*)\\((?P<params>.*)\\)");
+	sregex funcRegex = sregex::compile(".*\\s(?P<func>.*)\\((?P<params>.*)\\)");
 	//select all of the function definitions into result.m_funcDefMap.
 	for (auto i = 0; i < cInst; i++)
 	{
 		SZ sz; TYP typ; ATR atr;
+		char undecorateName[1024];
 		m_pbsc->iinstInfo(rgInst[i], &sz, &typ, &atr);
-		string fullFuncWithParams = m_pbsc->formatDname(sz);
+		::UnDecorateSymbolName(
+			sz, undecorateName, 1024, UNDNAME_COMPLETE);
+
+		//string fullFuncWithParams = m_pbsc->formatDname(sz);
+		string fullFuncWithParams = undecorateName;
 		//see whether the function initial with in the set
-		if (!functionInitials.empty())
+		/*if (!functionInitials.empty())
 		{
 			auto itr = functionInitials.begin();
 			for (; itr != functionInitials.end(); itr++)
@@ -51,7 +57,7 @@ FuncExtractResult FuncExtractor::Extract(const std::set<std::string>& functionIn
 			}
 			if (itr == functionInitials.end())
 				continue;
-		}
+		}*/
 
 		std::string  type = m_pbsc->szFrTyp(typ);
 		//only care about functions and member functions
@@ -65,6 +71,22 @@ FuncExtractResult FuncExtractor::Extract(const std::set<std::string>& functionIn
 			{
 				funcDef.m_fullQualifiedName = what["func"];
 				funcDef.m_parameters = what["params"];
+
+				//drop all destructors
+				if (funcDef.m_fullQualifiedName.find("scalar deleting destructor") != funcDef.m_fullQualifiedName.npos)
+					continue;
+				std::size_t pos = funcDef.m_fullQualifiedName.rfind("::");
+				if (pos == funcDef.m_fullQualifiedName.npos)
+				{
+					pos = 0;
+				}
+				else
+					pos = pos + 2;
+				if (funcDef.m_fullQualifiedName[pos] == '~')
+				{
+					continue;
+				}
+
 				funcDef.m_id = rgInst[i];
 
 				IDEF *rgidef;
@@ -83,6 +105,10 @@ FuncExtractResult FuncExtractor::Extract(const std::set<std::string>& functionIn
 				result.m_funcDefMap[funcDef.m_id] = funcDef;
 				
 			}
+			else
+			{
+				funcDef.m_comments = "bad parsing.";
+			}
 
 		}
 	}
@@ -99,22 +125,22 @@ FuncExtractResult FuncExtractor::Extract(const std::set<std::string>& functionIn
 		{
 			for (auto j = 0; j < cidef; j++) {
 				
-				IINST callingContextId = m_pbsc->iinstContextIref(rgidef[j]);
-				if (callingContextId != iinstNil)
+				IINST sourceContextId = m_pbsc->iinstContextIref(rgidef[j]);
+				if (sourceContextId != iinstNil)
 				{
-					m_pbsc->iinstInfo(callingContextId, &sz, &typ, &atr);
+					m_pbsc->iinstInfo(sourceContextId, &sz, &typ, &atr);
 					type = m_pbsc->szFrTyp(typ);
 					//only care about source context is a function or member function
 					if (type != "function" && type != "mem_func")
 						continue;
 					//if source context is not in the map (external call case), just create it.
-					if (result.m_funcDefMap.find(callingContextId) == result.m_funcDefMap.end()
-						&& extraFuncDefMap.find(callingContextId) == extraFuncDefMap.end())
+					if (result.m_funcDefMap.find(sourceContextId) == result.m_funcDefMap.end()
+						&& extraFuncDefMap.find(sourceContextId) == extraFuncDefMap.end())
 					{
 						FuncDefinition funcDef;
 						IDEF *rgidef_;
 						ULONG cidef_;
-						funcDef.m_id = callingContextId;
+						funcDef.m_id = sourceContextId;
 						string fullFuncWithParams = m_pbsc->formatDname(sz);
 						smatch what;
 						if (regex_search(fullFuncWithParams, what, funcRegex))
@@ -122,7 +148,11 @@ FuncExtractResult FuncExtractor::Extract(const std::set<std::string>& functionIn
 							funcDef.m_fullQualifiedName = what["func"];
 							funcDef.m_parameters = what["params"];
 						}
-						if (m_pbsc->getDefArray(callingContextId, &rgidef_, &cidef_) && cidef_ != 0)
+						else
+						{
+							funcDef.m_comments = "bad parsing.";
+						}
+						if (m_pbsc->getDefArray(sourceContextId, &rgidef_, &cidef_) && cidef_ != 0)
 						{
 							for (auto j = 0; j < cidef_; j++) {
 								SZ sz_; LINE line_;
@@ -132,13 +162,13 @@ FuncExtractResult FuncExtractor::Extract(const std::set<std::string>& functionIn
 							}
 							m_pbsc->disposeArray(rgidef_);
 						}
-						extraFuncDefMap[callingContextId] = funcDef;
+						extraFuncDefMap[sourceContextId] = funcDef;
 					}
 				}
 				else
 					continue;
 				FuncCall funcCall;
-				funcCall.m_sourceId = callingContextId;
+				funcCall.m_sourceId = sourceContextId;
 				funcCall.m_targetId = itr->first;
 				m_pbsc->irefInfo(rgidef[j], &sz, &line);
 				funcCall.m_sourceFilePath = sz;

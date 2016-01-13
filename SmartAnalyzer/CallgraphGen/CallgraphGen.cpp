@@ -1,5 +1,5 @@
 #include "FuncExtractor.h"
-
+#include "GraphGenerator.h"
 using namespace SmartAnalyzer::CallGraph;
 
 void main(int argc, char **argv)
@@ -15,11 +15,9 @@ void main(int argc, char **argv)
 	std::set<std::string> functionInitials;
 	for (auto i = 3; i < argc; i++)
 		functionInitials.insert(argv[i]);
-	auto resQueue = funcExtractor.Extract(functionInitials);
+	auto funcExtractRes = funcExtractor.Extract(functionInitials);
 
-	//if (!resQueue.empty())
-	//{
-		//TODO: generate the dot file using the resQueue
-	//}
+	GraphGenerator graphGen;
+	graphGen.Generate(funcExtractRes, argv[2]);
 
 }
