@@ -27,25 +27,28 @@ FuncExtractResult FuncExtractor::Extract(const std::set<std::string>& functionIn
 {
 	ULONG cInst;
 	IINST *rgInst = NULL;
-	if (!m_pbsc->getOverloadArray("*", m_mbf, &rgInst, &cInst) || cInst == 0) {
-		printf("no symbols matching '%s'\n", "*");
+	std::string searchPattern = "*";
+	if (!m_pbsc->getOverloadArray((SZ)searchPattern.c_str(), m_mbf, &rgInst, &cInst) || cInst == 0) {
+		printf("no symbols matching '%s'\n", searchPattern.c_str());
 	}
 	
 	FuncExtractResult result;
-	sregex funcRegex = sregex::compile(".*\\s(?P<func>.*)\\((?P<params>.*)\\)");
+	char undecorateName[2048];
+	sregex funcRegex = sregex::compile("(?P<func>.*)\\((?P<params>.*)\\)");
 	//select all of the function definitions into result.m_funcDefMap.
 	for (auto i = 0; i < cInst; i++)
 	{
 		SZ sz; TYP typ; ATR atr;
-		char undecorateName[1024];
+		
 		m_pbsc->iinstInfo(rgInst[i], &sz, &typ, &atr);
 		::UnDecorateSymbolName(
-			sz, undecorateName, 1024, UNDNAME_COMPLETE);
+			sz, undecorateName, 1024, 
+			UNDNAME_COMPLETE | UNDNAME_NO_LEADING_UNDERSCORES | UNDNAME_NO_MS_KEYWORDS | UNDNAME_NO_FUNCTION_RETURNS 
+			| UNDNAME_NO_ACCESS_SPECIFIERS | UNDNAME_NO_MEMBER_TYPE);
 
-		//string fullFuncWithParams = m_pbsc->formatDname(sz);
 		string fullFuncWithParams = undecorateName;
 		//see whether the function initial with in the set
-		/*if (!functionInitials.empty())
+		if (!functionInitials.empty())
 		{
 			auto itr = functionInitials.begin();
 			for (; itr != functionInitials.end(); itr++)
@@ -57,7 +60,7 @@ FuncExtractResult FuncExtractor::Extract(const std::set<std::string>& functionIn
 			}
 			if (itr == functionInitials.end())
 				continue;
-		}*/
+		}
 
 		std::string  type = m_pbsc->szFrTyp(typ);
 		//only care about functions and member functions
@@ -141,7 +144,11 @@ FuncExtractResult FuncExtractor::Extract(const std::set<std::string>& functionIn
 						IDEF *rgidef_;
 						ULONG cidef_;
 						funcDef.m_id = sourceContextId;
-						string fullFuncWithParams = m_pbsc->formatDname(sz);
+						::UnDecorateSymbolName(
+							sz, undecorateName, 1024,
+							UNDNAME_COMPLETE | UNDNAME_NO_LEADING_UNDERSCORES | UNDNAME_NO_MS_KEYWORDS | UNDNAME_NO_FUNCTION_RETURNS
+							| UNDNAME_NO_ACCESS_SPECIFIERS | UNDNAME_NO_MEMBER_TYPE);
+						string fullFuncWithParams = undecorateName;
 						smatch what;
 						if (regex_search(fullFuncWithParams, what, funcRegex))
 						{

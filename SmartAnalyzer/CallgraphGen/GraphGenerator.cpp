@@ -20,6 +20,28 @@ GraphGenerator::~GraphGenerator()
 
 }
 
+template <class NameMap, class SourcePathMap, class LineMap, class CommentsMap>
+class Vertex_Writer {
+public:
+	Vertex_Writer(NameMap n, SourcePathMap s, LineMap l, CommentsMap c) : name(n), sourcePath(s), line(l), comments(c) {}
+	template <class Vertex>
+	void operator()(std::ostream &out, const Vertex& v) const {
+		out << "[label=\"" << name[v] << "\", sourcePath=\"" << sourcePath[v] << "\", line="  <<
+			line[v] << ", comments=\"" << comments[v] << "\"]";
+	}
+private:
+	NameMap name;
+	SourcePathMap sourcePath;
+	LineMap line;
+	CommentsMap comments;
+};
+
+template <class NameMap, class SourcePathMap, class LineMap, class CommentsMap>
+inline Vertex_Writer<NameMap, SourcePathMap, LineMap, CommentsMap>
+make_vertex_writer(NameMap n, SourcePathMap s, LineMap l, CommentsMap c) {
+	return Vertex_Writer<NameMap, SourcePathMap, LineMap, CommentsMap>(n, s, l, c);
+}
+
 bool GraphGenerator::Generate(const FuncExtractResult& funcExtractResult, const std::string& outputFilePath)
 {
 	// create a typedef for the Graph type
@@ -48,7 +70,9 @@ bool GraphGenerator::Generate(const FuncExtractResult& funcExtractResult, const 
 	idVertexDescMap.clear();
 
 	std::ofstream fout(outputFilePath.c_str());
-	boost::write_graphviz(fout, g, make_label_writer(boost::get(&FuncDefinition::m_fullQualifiedName, g)));
+	boost::write_graphviz(fout, g, make_vertex_writer(boost::get(&FuncDefinition::m_fullQualifiedName, g), 
+		boost::get(&FuncDefinition::m_sourceFilePath, g), boost::get(&FuncDefinition::m_startLine, g),
+		boost::get(&FuncDefinition::m_comments, g)));
 
 	return true;
 }
