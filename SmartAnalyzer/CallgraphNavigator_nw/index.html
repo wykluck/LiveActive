@@ -1,0 +1,79 @@
+﻿<!--
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.4.11/d3.min.js"></script>
+<script src="http://cpettitt.github.io/project/graphlib-dot/v0.4.10/graphlib-dot.min.js"></script>
+<script src="http://cpettitt.github.io/project/dagre-d3/v0.1.5/dagre-d3.min.js"></script>
+-->
+<script src="./node_modules/d3/d3.min.js"></script>
+<script src="./node_modules/dagre-d3/dist/dagre-d3.min.js"></script>
+<link rel="stylesheet" href="./node_modules/dagre-d3/dist/demo/tipsy.css">
+<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script src="./node_modules/dagre-d3/dist/demo/tipsy.js"></script>
+
+<html>
+<style>
+svg {
+  overflow: hidden;
+}
+.node rect {
+  stroke: #333;
+  stroke-width: 1.5px;
+  fill: #fff;
+}
+.edgeLabel rect {
+  fill: #fff;
+}
+.edgePath {
+  stroke: #333;
+  stroke-width: 1.5px;
+  fill: none;
+}
+</style>
+<body>
+  <script type='text/javascript'>
+      var fs = require('fs');
+      var buf = require('buffer');
+      var graphlibDot = require('graphlib-dot');
+      window.onload = function() {
+      // Parse the DOT syntax into a graphlib object.
+      var buf = fs.readFileSync('D:/Github/LiveActive/staging/public/bin/Win32Release/callgraph.dot');
+
+
+      var g = graphlibDot.read(buf.toString());
+
+      // Render the graphlib object using d3.
+      var render = dagreD3.render();
+  
+      // Set up an SVG group so that we can translate the final graph.
+      var svg = d3.select("svg"),
+          inner = svg.append("g");
+
+      // Set up zoom support
+      var zoom = d3.behavior.zoom().on("zoom", function() {
+          inner.attr("transform", "translate(" + d3.event.translate + ")" +
+                                      "scale(" + d3.event.scale + ")");
+        });
+      svg.call(zoom);
+
+      // Simple function to style the tooltip for the given node.
+      var styleTooltip = function(sourcePath, line) {
+          return "<p class='sourcePath'>" + sourcePath + "</p><p class='line'>" + line + "</p>";
+      };
+
+      render(inner, g);
+
+      inner.selectAll("g.node")
+        .attr("title", function(v) { return styleTooltip(g.node(v).sourcePath, g.node(v).line) })
+        .each(function(v) { $(this).tipsy({ gravity: "w", opacity: 1, html: true }); });
+
+      // Optional - resize the SVG element based on the contents.
+      var svg = document.querySelector('#graphContainer');
+      var bbox = svg.getBBox();
+      svg.style.width = bbox.width + 40.0 + "px";
+      svg.style.height = bbox.height + 40.0 + "px";
+    }
+  </script>
+  <svg id="graphContainer">
+  </svg>
+</body>
+
+</html>

@@ -1,0 +1,14 @@
+{
+  "name": "nwsample",
+  "version": "0.0.0",
+  "description": "nwsample",
+  "main": "index.html",
+  "author": {
+    "name": "ywang",
+    "email": ""
+  },
+  "dependencies": {
+  	"graphlib-dot": "0.6.2",
+  	"dagre-d3": "0.4.11"
+  }
+}
